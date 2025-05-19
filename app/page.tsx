@@ -51,7 +51,7 @@ export default function Home() {
           <Button
             onClick={() => router.push(`/play/${code}`)}
             disabled={!code}
-            className="px-8 h-12 bg-primary/90 hover:bg-primary transition-colors"
+            className="px-8 h-12 bg-primary hover:bg-primary/90 transition-colors"
           >
             Go
           </Button>
