@@ -27,14 +27,18 @@ export default function LeaderboardTable({entries}: LeaderboardTableProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Player</TableHead>
+              <TableHead>Game ID</TableHead>
               <TableHead>Best Score</TableHead>
+              <TableHead>Played At</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {entries.map((e, i) => (
               <TableRow key={i}>
                 <TableCell>{e.player}</TableCell>
+                <TableCell>{e.game_id}</TableCell>
                 <TableCell>{e.best}</TableCell>
+                <TableCell>{e.played_at}</TableCell>
               </TableRow>
             ))}
           </TableBody>
