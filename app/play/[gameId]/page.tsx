@@ -1,22 +1,23 @@
-// Modified app/play/[gameId]/page.tsx
-'use client'
+// app/play/[gameId]/page.tsx (updated)
+'use client';
 
-import {useParams, useRouter} from 'next/navigation'
-import {useGame} from '@/hooks/useGame'
-import QuestionCard from '@/components/QuestionCard'
-import {useGameState} from '@/hooks/useGameState'
-import {useEffect, useState} from 'react'
-import {Question} from '@/utils/apiTypes'
-import {getQuestionPoints, POINT_VALUES} from '@/utils/game'
+import {useParams, useRouter} from 'next/navigation';
+import {useGame} from '@/hooks/useGame';
+import QuestionCard from '@/components/QuestionCard';
+import QuestionCardSkeleton from '@/components/QuestionCardSkeleton';
+import {useGameLogic} from '@/hooks/useGameLogic';
+import {useEffect, useState} from 'react';
+import {Question} from '@/utils/apiTypes';
+import {POINT_VALUES} from '@/utils/game';
 
 export default function PlayPage() {
   const params = useParams();
   const gameId = params?.gameId ? String(params.gameId) : 'random';
-  const router = useRouter()
+  const router = useRouter();
 
   // If gameId === 'random' we fetch via /games/random; otherwise /games/{id}
-  const parsedId = gameId === 'random' ? undefined : Number(gameId)
-  const {data: game, isLoading, error} = useGame(parsedId)
+  const parsedId = gameId === 'random' ? undefined : Number(gameId);
+  const {data: game, isLoading, error} = useGame(parsedId);
 
   // Store questions in local state to avoid mutating React Query cache
   const [questions, setQuestions] = useState<Question[] | null>(null);
@@ -28,49 +29,63 @@ export default function PlayPage() {
     }
   }, [game]);
 
-  // Get all game state from our hook
+  // Use our custom hook for game logic
   const {
-    idx, setIdx,
-    score, setScore,
-    lives, setLives,
-    removedOptions, setRemovedOptions,
-    usedBonusQuestion, setUsedBonusQuestion,
-    startTime, setStartTime,
+    currentQuestion,
+    idx,
+    score,
+    lives,
+    removedOptions,
+    startTime,
+    pointValue,
+    progressPercent,
+    handleAnswer,
+    handleUseFifty,
+    handleUseHint,
+    handleChangeQuestion,
+    usedBonusQuestion,
     resetGame
-  } = useGameState(game?.game_id ?? gameId)
+  } = useGameLogic({
+    gameId: game?.game_id ?? gameId,
+    questions,
+    bonusQuestion: game?.bonus_question || null,
+    maxQuestions: 15
+  });
 
   // Reset game state when transitioning from random to real gameId
   useEffect(() => {
     if (game && gameId === 'random') {
-      // Reset all state when we get the real game ID
+      // Reset all state and redirect to the real game ID
       resetGame();
-      setIdx(0);
-      setScore(0);
-      setLives({fifty: true, hint: true, change: true});
-      setRemovedOptions([]);
-      setUsedBonusQuestion(false);
-      setStartTime(0);
       router.replace(`/play/${game.game_id}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [game, gameId, router]); // Only include external dependencies
+  }, [game, gameId, router]);
 
-  // Set the timer when a new question loads
-  useEffect(() => {
-    if (game && startTime === 0) {
-      setStartTime(Date.now())
+  // Handle change question action (replace current with bonus)
+  const handleChangeQuestionAction = () => {
+    if (handleChangeQuestion() && game?.bonus_question) {
+      // Update our local questions array without mutating the cache
+      setQuestions((qs) =>
+        qs?.map((q, i) => (i === idx ? game.bonus_question! : q)) || null
+      );
     }
-  }, [game, idx, startTime, setStartTime])
+  };
 
+  // Loading state
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-        <p className="mt-4 text-lg">Loading your quiz...</p>
+      <div className="px-4 py-8 max-w-6xl mx-auto">
+        <div className="mb-10">
+          <div className="h-16 animate-pulse bg-muted/50 rounded-lg mb-3"></div>
+          <div className="h-2 w-full bg-secondary rounded-full overflow-hidden"></div>
+        </div>
+        <QuestionCardSkeleton/>
       </div>
-    )
+    );
   }
 
+  // Error state
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
@@ -87,13 +102,15 @@ export default function PlayPage() {
         <button
           onClick={() => router.push('/')}
           className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+          aria-label="Return to home page"
         >
           Return Home
         </button>
       </div>
-    )
+    );
   }
 
+  // No game found
   if (!game) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
@@ -101,84 +118,16 @@ export default function PlayPage() {
         <button
           onClick={() => router.push('/')}
           className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+          aria-label="Return to home page"
         >
           Return Home
         </button>
       </div>
-    )
-  }
-
-  // Use our local questions state if available, otherwise fall back to game.questions
-  const current = questions?.[idx] || game.questions[idx];
-  const pointValue = getQuestionPoints(idx)
-
-  const handleAnswer = (choice: string) => {
-    const correct = choice === current.correct
-
-    // Calculate time-based bonus
-    const elapsed = Math.floor((Date.now() - startTime) / 1000)
-    const doublePoints = elapsed <= 15
-    const pointMultiplier = doublePoints && correct ? 2 : 1
-
-    // Calculate new score
-    const newScore = correct ? score + (pointValue * pointMultiplier) : score
-    const nextIdx = idx + 1
-
-    // Maximum number of questions is 15 (not including bonus)
-    const maxQuestions = Math.min(game.questions.length, 15);
-
-    if (!correct || nextIdx >= maxQuestions) {
-      // Game over - either wrong answer or finished all questions
-      resetGame();
-      router.push(`/result/${game.game_id}?score=${newScore}`)
-    } else {
-      // Move to next question
-      setScore(newScore)
-      setIdx(nextIdx)
-      setStartTime(Date.now()) // Reset timer for next question
-      setRemovedOptions([]) // Reset removed options
-    }
-  }
-
-  const handleUseFifty = () => {
-    if (!lives.fifty) return
-
-    // Get wrong answers only
-    const wrongOptions = current.wrong
-
-    // Randomly select 2 wrong answers to remove
-    const shuffled = [...wrongOptions].sort(() => Math.random() - 0.5)
-    const toRemove = shuffled.slice(0, 2)
-
-    setRemovedOptions(toRemove)
-    setLives({...lives, fifty: false})
-  }
-
-  const handleUseHint = () => {
-    if (!lives.hint) return
-    setLives({...lives, hint: false})
-    // The QuestionCard component will handle showing the hint
-  }
-
-  const handleChangeQuestion = () => {
-    if (!lives.change || !game.bonus_question || usedBonusQuestion) return
-
-    // Update our local questions array without mutating the cache
-    setQuestions((qs) =>
-      qs
-        ? qs.map((q, i) => (i === idx ? game.bonus_question! : q))
-        : qs
     );
-
-    setLives({...lives, change: false})
-    setUsedBonusQuestion(true)
-    setStartTime(Date.now()) // Reset timer for the new question
-    setRemovedOptions([]) // Reset removed options
   }
 
-  // Calculate percentage progress
+  // Maximum number of questions
   const maxQuestions = Math.min(game.questions.length, 15);
-  const progressPercent = Math.round((idx / maxQuestions) * 100);
 
   return (
     <div className="px-4 py-8 max-w-6xl mx-auto">
@@ -190,10 +139,19 @@ export default function PlayPage() {
               Question {idx + 1} of {maxQuestions}
             </span>
           </div>
-          <div className="money-text text-2xl font-mono">${score.toLocaleString()}</div>
+          <div className="money-text text-2xl font-mono" aria-label={`Current score: ${score} dollars`}>
+            ${score.toLocaleString()}
+          </div>
         </div>
 
-        <div className="relative h-2 w-full bg-secondary rounded-full overflow-hidden">
+        <div
+          className="relative h-2 w-full bg-secondary rounded-full overflow-hidden"
+          role="progressbar"
+          aria-valuenow={progressPercent}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Quiz progress: ${progressPercent}%`}
+        >
           <div
             className="absolute h-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-500 ease-out"
             style={{width: `${progressPercent}%`}}
@@ -201,19 +159,21 @@ export default function PlayPage() {
         </div>
       </div>
 
-      <QuestionCard
-        question={current}
-        bonusQuestion={!usedBonusQuestion ? game.bonus_question : null}
-        questionNumber={idx + 1}
-        action={handleAnswer}
-        lives={lives}
-        onUseFiftyAction={handleUseFifty}
-        onUseHintAction={handleUseHint}
-        onChangeQuestionAction={handleChangeQuestion}
-        removedOptions={removedOptions}
-        startTime={startTime}
-        pointValue={pointValue}
-      />
+      {currentQuestion && (
+        <QuestionCard
+          question={currentQuestion}
+          bonusQuestion={!usedBonusQuestion ? game.bonus_question : null}
+          questionNumber={idx + 1}
+          action={handleAnswer}
+          lives={lives}
+          onUseFiftyAction={handleUseFifty}
+          onUseHintAction={handleUseHint}
+          onChangeQuestionAction={handleChangeQuestionAction}
+          removedOptions={removedOptions}
+          startTime={startTime}
+          pointValue={pointValue}
+        />
+      )}
 
       <div className="mt-10 max-w-md mx-auto">
         <div className="bg-card/50 backdrop-blur-sm border border-border/40 rounded-lg p-4">
@@ -234,6 +194,7 @@ export default function PlayPage() {
                         ? 'text-foreground/50'
                         : ''
                   }`}
+                  aria-current={isCurrentQuestion ? 'true' : 'false'}
                 >
                   <span>Question {questionIdx + 1}</span>
                   <span className={isPastQuestion ? '' : 'money-text'}>
@@ -246,5 +207,5 @@ export default function PlayPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
