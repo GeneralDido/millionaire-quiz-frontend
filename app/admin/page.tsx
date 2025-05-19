@@ -44,7 +44,7 @@ export default function AdminPage() {
         {games?.map((g: GameListEntry) => (
           <li key={g.game_id} className="flex justify-between">
             <Link
-              href={`/play/${g.game_id}`}
+              href={`/admin/games/${g.game_id}`}
               className="text-blue-600 underline"
             >
               Game {g.game_id}
