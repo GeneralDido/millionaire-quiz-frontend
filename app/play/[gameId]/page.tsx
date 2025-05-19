@@ -36,6 +36,7 @@ export default function PlayPage({params}: PlayPageProps) {
 
   return (
     <div className="px-4 py-8">
+      <h2 className="text-center text-lg font-medium">Quiz #{game.game_id}</h2>
       <QuestionCard question={current} action={handleAnswer}/>
       <p className="mt-4 text-center">
         Question {idx + 1} of {game.questions.length}
@@ -43,4 +44,3 @@ export default function PlayPage({params}: PlayPageProps) {
     </div>
   )
 }
-
