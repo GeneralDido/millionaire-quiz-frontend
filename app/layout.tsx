@@ -33,7 +33,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
         </main>
         <footer className="py-6 text-center text-sm text-foreground/60">
           <div className="max-w-7xl mx-auto">
-            Who Wants to Be a Millionaire Quiz Game &copy; {new Date().getFullYear()}
+            Millionaire Quiz Game &copy; {new Date().getFullYear()}
           </div>
         </footer>
       </div>
