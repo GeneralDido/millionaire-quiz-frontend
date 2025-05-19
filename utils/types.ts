@@ -78,6 +78,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/games/{game_id}/exists": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Check whether a game exists */
+        get: operations["game_exists_games__game_id__exists_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/games/{game_id}/score": {
         parameters: {
             query?: never;
@@ -139,6 +156,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** ExistsResponse */
+        ExistsResponse: {
+            /** Exists */
+            exists: boolean;
+        };
         /**
          * GameCreate
          * @description (reserved) additional options for game creation (e.g. category, difficulty)
@@ -295,6 +317,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GameRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    game_exists_games__game_id__exists_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                game_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExistsResponse"];
                 };
             };
             /** @description Validation Error */
