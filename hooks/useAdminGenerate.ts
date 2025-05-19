@@ -21,7 +21,7 @@ export function useAdminGenerate() {
       return (await res.json()) as GameRead
     },
     onSuccess: () => {
-      qc.invalidateQueries({queryKey: ['games-list']})
+      void qc.invalidateQueries({queryKey: ['games-list']})
     }
   })
 }
