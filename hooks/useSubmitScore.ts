@@ -8,7 +8,7 @@ export function useSubmitScore(gameId: number) {
   return useMutation<void, Error, ScoreCreate>({
     mutationFn: (data) => post<void>(`/games/${gameId}/score`, data),
     onSuccess: () => {
-      qc.invalidateQueries({queryKey: ['leaderboard']})
+      void qc.invalidateQueries({queryKey: ['leaderboard']})
     }
   })
 }
