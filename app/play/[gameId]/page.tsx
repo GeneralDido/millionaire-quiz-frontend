@@ -5,7 +5,9 @@ import {useParams, useRouter} from 'next/navigation'
 import {useGame} from '@/hooks/useGame'
 import QuestionCard from '@/components/QuestionCard'
 import {useGameState} from '@/hooks/useGameState'
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
+import {Question} from '@/utils/apiTypes'
+import {getQuestionPoints} from '@/utils/game'
 
 export default function PlayPage() {
   const params = useParams();
@@ -16,15 +18,17 @@ export default function PlayPage() {
   const parsedId = gameId === 'random' ? undefined : Number(gameId)
   const {data: game, isLoading, error} = useGame(parsedId)
 
-  // Once we've got back a real game from "random", swap the URL
-  useEffect(() => {
-    if (gameId === 'random' && game?.game_id) {
-      // replace without full reload, so refresh stays on the same quiz
-      router.replace(`/play/${game.game_id}`)
-    }
-  }, [gameId, game, router])
+  // Store questions in local state to avoid mutating React Query cache
+  const [questions, setQuestions] = useState<Question[] | null>(null);
 
-  // Use our game state hook for all the game mechanics
+  // Initialize questions when game data loads
+  useEffect(() => {
+    if (game?.questions) {
+      setQuestions([...game.questions]);
+    }
+  }, [game]);
+
+  // Get all game state from our hook
   const {
     idx, setIdx,
     score, setScore,
@@ -32,9 +36,24 @@ export default function PlayPage() {
     removedOptions, setRemovedOptions,
     usedBonusQuestion, setUsedBonusQuestion,
     startTime, setStartTime,
-    getQuestionPoints,
     resetGame
   } = useGameState(game?.game_id ?? gameId)
+
+  // Reset game state when transitioning from random to real gameId
+  useEffect(() => {
+    if (game && gameId === 'random') {
+      // Reset all state when we get the real game ID
+      resetGame();
+      setIdx(0);
+      setScore(0);
+      setLives({fifty: true, hint: true, change: true});
+      setRemovedOptions([]);
+      setUsedBonusQuestion(false);
+      setStartTime(0);
+      router.replace(`/play/${game.game_id}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game, gameId, router]); // Only include external dependencies
 
   // Set the timer when a new question loads
   useEffect(() => {
@@ -47,7 +66,8 @@ export default function PlayPage() {
   if (error) return <p className="text-red-600">Error: {error.message}</p>
   if (!game) return <p className="text-red-600">No quiz found.</p>
 
-  const current = game.questions[idx]
+  // Use our local questions state if available, otherwise fall back to game.questions
+  const current = questions?.[idx] || game.questions[idx];
   const pointValue = getQuestionPoints(idx)
 
   const handleAnswer = (choice: string) => {
@@ -62,9 +82,12 @@ export default function PlayPage() {
     const newScore = correct ? score + (pointValue * pointMultiplier) : score
     const nextIdx = idx + 1
 
-    if (!correct || nextIdx >= game.questions.length) {
+    // Maximum number of questions is 15 (not including bonus)
+    const maxQuestions = Math.min(game.questions.length, 15);
+
+    if (!correct || nextIdx >= maxQuestions) {
       // Game over - either wrong answer or finished all questions
-      resetGame()
+      resetGame();
       router.push(`/result/${game.game_id}?score=${newScore}`)
     } else {
       // Move to next question
@@ -98,10 +121,12 @@ export default function PlayPage() {
   const handleChangeQuestion = () => {
     if (!lives.change || !game.bonus_question || usedBonusQuestion) return
 
-    // Replace current question with bonus question
-    const newQuestions = [...game.questions]
-    newQuestions[idx] = game.bonus_question
-    game.questions = newQuestions
+    // Update our local questions array without mutating the cache
+    setQuestions((qs) =>
+      qs
+        ? qs.map((q, i) => (i === idx ? game.bonus_question! : q))
+        : qs
+    );
 
     setLives({...lives, change: false})
     setUsedBonusQuestion(true)
@@ -131,7 +156,7 @@ export default function PlayPage() {
       />
 
       <p className="mt-4 text-center">
-        Question {idx + 1} of {game.questions.length}
+        Question {idx + 1} of {Math.min(game.questions.length, 15)}
       </p>
     </div>
   )

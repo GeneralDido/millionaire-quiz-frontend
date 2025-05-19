@@ -7,7 +7,6 @@ import {Card, CardHeader, CardContent, CardFooter} from '@/components/ui/card'
 import {Button} from '@/components/ui/button'
 import {Progress} from '@/components/ui/progress'
 
-
 interface GameLives {
   fifty: boolean
   hint: boolean
@@ -41,11 +40,16 @@ export default function QuestionCard({
                                        startTime,
                                        pointValue
                                      }: QuestionCardProps) {
-  const [showHint, setShowHint] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(15)
-  const [doublePointsActive, setDoublePointsActive] = useState(true)
+  // Properly calculate initial time left based on startTime
+  const initialTimeLeft = startTime
+    ? Math.max(15 - Math.floor((Date.now() - startTime) / 1000), 0)
+    : 15;
 
-  // Reset showHint when question changes
+  const [showHint, setShowHint] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(initialTimeLeft)
+  const [doublePointsActive, setDoublePointsActive] = useState(initialTimeLeft > 0)
+
+  // Reset showHint when question changes to prevent auto-showing hint for new questions
   useEffect(() => {
     setShowHint(false);
   }, [question]);
@@ -56,7 +60,7 @@ export default function QuestionCard({
     return opts.sort(() => Math.random() - 0.5)
   }, [question])
 
-  // Timer for double points
+  // Timer for double points - using 1000ms for better performance
   useEffect(() => {
     if (startTime > 0) {
       const interval = setInterval(() => {
@@ -68,7 +72,7 @@ export default function QuestionCard({
           setDoublePointsActive(false)
           clearInterval(interval)
         }
-      }, 100)
+      }, 1000)
 
       return () => clearInterval(interval)
     }
