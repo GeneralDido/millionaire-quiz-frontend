@@ -99,7 +99,7 @@ export default function ScoreForm({gameId, score}: ScoreFormProps) {
 
           <Button
             variant="outline"
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/play/random')}
             className="h-12"
           >
             Play Again
