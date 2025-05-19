@@ -1,4 +1,4 @@
-// Improved ScoreForm.tsx
+// components/ScoreForm.tsx
 'use client'
 
 import {useState, useEffect} from 'react'
