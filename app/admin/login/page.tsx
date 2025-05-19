@@ -4,7 +4,7 @@ import {useState} from 'react'
 import {useRouter} from 'next/navigation'
 import {Input} from '@/components/ui/input'
 import {Button} from '@/components/ui/button'
-import {Card, CardHeader, CardContent, CardFooter} from '@/components/ui/card'
+import {Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription} from '@/components/ui/card'
 import {Lock} from 'lucide-react'
 
 export default function AdminLoginPage() {
@@ -28,6 +28,7 @@ export default function AdminLoginPage() {
 
       if (res.ok) router.push('/admin')
       else setErr('Invalid credentials')
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setErr('Login failed. Please try again.')
     } finally {
@@ -42,10 +43,10 @@ export default function AdminLoginPage() {
           <div className="w-16 h-16 bg-primary/10 text-primary rounded-full mx-auto flex items-center justify-center">
             <Lock className="h-8 w-8"/>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight">Admin Login</h1>
-          <p className="text-muted-foreground text-sm">
+          <CardTitle className="text-3xl font-bold tracking-tight">Admin Login</CardTitle>
+          <CardDescription>
             Enter your credentials to access the admin area
-          </p>
+          </CardDescription>
         </CardHeader>
 
         <CardContent>
