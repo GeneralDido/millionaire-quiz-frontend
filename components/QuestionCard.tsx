@@ -41,9 +41,10 @@ export default function QuestionCard({
                                        startTime,
                                        pointValue
                                      }: QuestionCardProps) {
+  const bonusTime = 10;
   const initialTimeLeft = startTime
-    ? Math.max(15 - Math.floor((Date.now() - startTime) / 1000), 0)
-    : 15;
+    ? Math.max(bonusTime - Math.floor((Date.now() - startTime) / 1000), 0)
+    : bonusTime;
 
   const [showHint, setShowHint] = useState(false)
   const [timeLeft, setTimeLeft] = useState(initialTimeLeft)
@@ -69,7 +70,7 @@ export default function QuestionCard({
     if (startTime > 0) {
       const interval = setInterval(() => {
         const elapsed = Math.floor((Date.now() - startTime) / 1000)
-        const remaining = Math.max(15 - elapsed, 0)
+        const remaining = Math.max(bonusTime - elapsed, 0)
         setTimeLeft(remaining)
 
         if (remaining === 0) {
@@ -115,7 +116,7 @@ export default function QuestionCard({
 
         {doublePointsActive && (
           <Progress
-            value={timeLeft * 100 / 15}
+            value={timeLeft * 100 / bonusTime}
             className="h-2 bg-background/30 [&>div]:bg-gradient-to-r [&>div]:from-money-gold [&>div]:to-money-green"
           />
         )}
