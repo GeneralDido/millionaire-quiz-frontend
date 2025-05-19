@@ -1,42 +1,79 @@
 // hooks/useGameState.ts
-import {useSessionState} from './useSessionState';
+import {useState, useEffect} from 'react';
 
-interface GameLives {
-  fifty: boolean;
-  hint: boolean;
-  change: boolean;
+interface GameState {
+  idx: number;
+  score: number;
+  lives: {
+    fifty: boolean;
+    hint: boolean;
+    change: boolean;
+  };
+  removedOptions: string[];
+  usedBonusQuestion: boolean;
+  startTime: number;
 }
 
-export function useGameState(gameId: string | number) {
-  const key = String(gameId);
-  const [idx, setIdx] = useSessionState(`quiz-${key}-idx`, 0);
-  const [score, setScore] = useSessionState(`quiz-${key}-score`, 0);
-  const [lives, setLives] = useSessionState<GameLives>(`quiz-${key}-lives`, {
+const defaultGameState: GameState = {
+  idx: 0,
+  score: 0,
+  lives: {
     fifty: true,
     hint: true,
     change: true
+  },
+  removedOptions: [],
+  usedBonusQuestion: false,
+  startTime: 0
+};
+
+export function useGameState(gameId: string | number) {
+  const key = `quiz-${String(gameId)}`;
+
+  const [gameState, setGameState] = useState<GameState>(() => {
+    try {
+      // Try to get from sessionStorage on initial load
+      const json = typeof window !== 'undefined' ? sessionStorage.getItem(key) : null;
+      return json ? JSON.parse(json) : defaultGameState;
+    } catch {
+      return defaultGameState;
+    }
   });
-  const [removedOptions, setRemovedOptions] = useSessionState<string[]>(`quiz-${key}-removed`, []);
-  const [usedBonusQuestion, setUsedBonusQuestion] = useSessionState(`quiz-${key}-used-bonus`, false);
-  const [startTime, setStartTime] = useSessionState(`quiz-${key}-start-time`, 0);
+
+  // Update sessionStorage when state changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(key, JSON.stringify(gameState));
+    }
+  }, [key, gameState]);
+
+  // Provide individual setters for each property to maintain similar API
+  const setIdx = (idx: number) => setGameState(prev => ({...prev, idx}));
+  const setScore = (score: number) => setGameState(prev => ({...prev, score}));
+  const setLives = (lives: GameState['lives']) => setGameState(prev => ({...prev, lives}));
+  const setRemovedOptions = (removedOptions: string[]) => setGameState(prev => ({...prev, removedOptions}));
+  const setUsedBonusQuestion = (usedBonusQuestion: boolean) => setGameState(prev => ({...prev, usedBonusQuestion}));
+  const setStartTime = (startTime: number) => setGameState(prev => ({...prev, startTime}));
 
   const resetGame = () => {
-    // Clear all game state from sessionStorage
-    sessionStorage.removeItem(`quiz-${key}-idx`);
-    sessionStorage.removeItem(`quiz-${key}-score`);
-    sessionStorage.removeItem(`quiz-${key}-lives`);
-    sessionStorage.removeItem(`quiz-${key}-removed`);
-    sessionStorage.removeItem(`quiz-${key}-used-bonus`);
-    sessionStorage.removeItem(`quiz-${key}-start-time`);
+    // Clear game state from sessionStorage
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem(key);
+    }
+    // Reset state to defaults
+    setGameState(defaultGameState);
   };
 
   return {
-    idx, setIdx,
-    score, setScore,
-    lives, setLives,
-    removedOptions, setRemovedOptions,
-    usedBonusQuestion, setUsedBonusQuestion,
-    startTime, setStartTime,
+    // Destructure the state for easier access
+    ...gameState,
+    // Provide setters
+    setIdx,
+    setScore,
+    setLives,
+    setRemovedOptions,
+    setUsedBonusQuestion,
+    setStartTime,
     resetGame
   };
 }
