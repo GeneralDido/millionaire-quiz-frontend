@@ -8,7 +8,8 @@ import {useSessionState} from '@/hooks/useSessionState'
 import {useEffect} from 'react'
 
 export default function PlayPage() {
-  const {gameId} = useParams()!         // either 'random' or a numeric string
+  const params = useParams();
+  const gameId = params?.gameId ? String(params.gameId) : 'random';
   const router = useRouter()
 
   // If gameId === 'random' we fetch via /games/random; otherwise /games/{id}

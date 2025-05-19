@@ -13,7 +13,9 @@ import {
 import {Button} from '@/components/ui/button'
 
 export default function AdminGameDetail() {
-  const {gameId} = useParams()!
+  const params = useParams();
+  const gameId = params?.gameId ? String(params.gameId) : '';
+
   const router = useRouter()
   // Turn “123” → 123
   const id = gameId ? Number(gameId) : NaN
