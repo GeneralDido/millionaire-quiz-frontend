@@ -1,4 +1,7 @@
 // Define point values outside components for better performance
+
+export const BONUS_TIME = 10;    // seconds
+
 export const POINT_VALUES = [
   100, 200, 300, 500, 1000,
   2000, 4000, 8000, 16000, 32000,
