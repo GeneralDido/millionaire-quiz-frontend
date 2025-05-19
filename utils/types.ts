@@ -105,10 +105,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get Leaderboard
-         * @description Get global leaderboard with the highest scores
-         */
+        /** Get Leaderboard */
         get: operations["get_leaderboard_leaderboard__get"];
         put?: never;
         post?: never;
@@ -166,6 +163,10 @@ export interface components {
             player: string;
             /** Best */
             best: number;
+            /** Game Id */
+            game_id: number;
+            /** Played At */
+            played_at: string | null;
         };
         /** Question */
         Question: {
