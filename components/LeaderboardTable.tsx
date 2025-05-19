@@ -11,6 +11,7 @@ import {
   TableBody,
   TableCell
 } from '@/components/ui/table'
+import {formatDate} from '@/utils/format'
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[]
@@ -38,7 +39,7 @@ export default function LeaderboardTable({entries}: LeaderboardTableProps) {
                 <TableCell>{e.player}</TableCell>
                 <TableCell>{e.game_id}</TableCell>
                 <TableCell>{e.best}</TableCell>
-                <TableCell>{e.played_at}</TableCell>
+                <TableCell>{formatDate(e.played_at)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

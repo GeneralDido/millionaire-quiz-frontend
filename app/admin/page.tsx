@@ -6,6 +6,7 @@ import {useAdminGenerate} from '@/hooks/useAdminGenerate'
 import {useGamesList, GameListEntry} from '@/hooks/useGamesList'
 import {Button} from '@/components/ui/button'
 import Link from 'next/link'
+import {formatDate} from '@/utils/format'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -50,7 +51,7 @@ export default function AdminPage() {
               Game {g.game_id}
             </Link>
             <span className="text-sm text-gray-500">
-              {new Date(g.created_at).toLocaleString()}
+              {formatDate(g.created_at)}
             </span>
           </li>
         ))}
