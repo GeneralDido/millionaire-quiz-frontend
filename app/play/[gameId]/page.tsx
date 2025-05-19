@@ -1,4 +1,4 @@
-// app/play/[gameId]/page.tsx
+// Modified app/play/[gameId]/page.tsx
 'use client'
 
 import {useParams, useRouter} from 'next/navigation'
@@ -7,7 +7,7 @@ import QuestionCard from '@/components/QuestionCard'
 import {useGameState} from '@/hooks/useGameState'
 import {useEffect, useState} from 'react'
 import {Question} from '@/utils/apiTypes'
-import {getQuestionPoints} from '@/utils/game'
+import {getQuestionPoints, POINT_VALUES} from '@/utils/game'
 
 export default function PlayPage() {
   const params = useParams();
@@ -62,9 +62,51 @@ export default function PlayPage() {
     }
   }, [game, idx, startTime, setStartTime])
 
-  if (isLoading) return <p>Loading…</p>
-  if (error) return <p className="text-red-600">Error: {error.message}</p>
-  if (!game) return <p className="text-red-600">No quiz found.</p>
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+        <p className="mt-4 text-lg">Loading your quiz...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+        <div className="p-3 rounded-full bg-destructive/10 text-destructive mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <h2 className="text-xl font-semibold mb-2">Error Loading Quiz</h2>
+        <p className="text-red-600 mb-4">{error.message}</p>
+        <button
+          onClick={() => router.push('/')}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+        >
+          Return Home
+        </button>
+      </div>
+    )
+  }
+
+  if (!game) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+        <h2 className="text-xl font-semibold mb-4">No quiz found</h2>
+        <button
+          onClick={() => router.push('/')}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+        >
+          Return Home
+        </button>
+      </div>
+    )
+  }
 
   // Use our local questions state if available, otherwise fall back to game.questions
   const current = questions?.[idx] || game.questions[idx];
@@ -134,11 +176,29 @@ export default function PlayPage() {
     setRemovedOptions([]) // Reset removed options
   }
 
+  // Calculate percentage progress
+  const maxQuestions = Math.min(game.questions.length, 15);
+  const progressPercent = Math.round((idx / maxQuestions) * 100);
+
   return (
-    <div className="px-4 py-8">
-      <div className="max-w-lg mx-auto mb-4 flex justify-between items-center">
-        <h2 className="font-medium">Quiz #{game.game_id}</h2>
-        <p>Score: {score}</p>
+    <div className="px-4 py-8 max-w-6xl mx-auto">
+      <div className="mb-10">
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-center gap-2">
+            <h2 className="font-semibold text-xl">Quiz #{game.game_id}</h2>
+            <span className="text-sm px-2 py-1 bg-primary/10 text-primary rounded-full">
+              Question {idx + 1} of {maxQuestions}
+            </span>
+          </div>
+          <div className="money-text text-2xl font-mono">${score.toLocaleString()}</div>
+        </div>
+
+        <div className="relative h-2 w-full bg-secondary rounded-full overflow-hidden">
+          <div
+            className="absolute h-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-500 ease-out"
+            style={{width: `${progressPercent}%`}}
+          ></div>
+        </div>
       </div>
 
       <QuestionCard
@@ -155,9 +215,36 @@ export default function PlayPage() {
         pointValue={pointValue}
       />
 
-      <p className="mt-4 text-center">
-        Question {idx + 1} of {Math.min(game.questions.length, 15)}
-      </p>
+      <div className="mt-10 max-w-md mx-auto">
+        <div className="bg-card/50 backdrop-blur-sm border border-border/40 rounded-lg p-4">
+          <h3 className="text-center font-medium mb-3">Prize Ladder</h3>
+          <div className="space-y-1">
+            {POINT_VALUES.slice(0, maxQuestions).reverse().map((value, i) => {
+              const questionIdx = maxQuestions - 1 - i;
+              const isCurrentQuestion = questionIdx === idx;
+              const isPastQuestion = questionIdx < idx;
+
+              return (
+                <div
+                  key={i}
+                  className={`flex justify-between py-1 px-2 rounded ${
+                    isCurrentQuestion
+                      ? 'bg-primary text-primary-foreground font-medium'
+                      : isPastQuestion
+                        ? 'text-foreground/50'
+                        : ''
+                  }`}
+                >
+                  <span>Question {questionIdx + 1}</span>
+                  <span className={isPastQuestion ? '' : 'money-text'}>
+                    ${value.toLocaleString()}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
