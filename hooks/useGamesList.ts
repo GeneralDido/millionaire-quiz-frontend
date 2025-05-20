@@ -11,6 +11,6 @@ export interface GameListEntry {
 export function useGamesList() {
   return useQuery<GameListEntry[], Error>({
     queryKey: ['games-list'],
-    queryFn: () => get<GameListEntry[]>('/games/list')
+    queryFn: () => get<GameListEntry[]>('/games/list/')
   })
 }

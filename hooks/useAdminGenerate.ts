@@ -8,7 +8,7 @@ export function useAdminGenerate() {
   return useMutation<GameRead, Error>({
     // call Next.js API (no baseURL override)
     mutationFn: async () => {
-      const res = await fetch('/api/admin/generate', {
+      const res = await fetch('/api/admin/generate/', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({}) // your empty JSON payload

@@ -7,8 +7,8 @@ export function useGame(gameId?: number) {
     queryKey: ['game', gameId ?? 'random'],
     queryFn: () =>
       typeof gameId === 'number'
-        ? get<GameRead>(`/games/${gameId}`)
-        : get<GameRead>('/games/random'),
+        ? get<GameRead>(`/games/${gameId}/`)
+        : get<GameRead>('/games/random/'),
     retry: false
   })
 }
