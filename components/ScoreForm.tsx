@@ -5,18 +5,30 @@ import {useState, useEffect} from 'react'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {useSubmitScore} from '@/hooks/useSubmitScore'
+import {useLeaderboard} from '@/hooks/useLeaderboard'
 import {useRouter} from 'next/navigation'
+import {useResult} from '@/context/ResultContext'
+import {LEADERBOARD_SIZE} from '@/utils/game'
 import confetti from 'canvas-confetti'
 
-interface ScoreFormProps {
-  gameId: number
-  score: number
-}
-
-export default function ScoreForm({gameId, score}: ScoreFormProps) {
+export default function ScoreForm() {
+  const {gameId, score} = useResult()
   const [name, setName] = useState('')
   const router = useRouter()
   const mutation = useSubmitScore(gameId)
+  const {data: leaderboard, isLoading: leaderboardLoading} = useLeaderboard(LEADERBOARD_SIZE)
+
+  // Check if score is eligible for leaderboard
+  const isEligibleForLeaderboard = () => {
+    if (!leaderboard) return false
+
+    // If leaderboard has fewer than LEADERBOARD_SIZE entries, always eligible
+    if (leaderboard.length < LEADERBOARD_SIZE) return true
+
+    // Check if score is higher than the lowest score in leaderboard
+    const lowestScore = leaderboard[leaderboard.length - 1]?.best || 0
+    return score > lowestScore
+  }
 
   // Celebration effect for high scores
   useEffect(() => {
@@ -56,21 +68,22 @@ export default function ScoreForm({gameId, score}: ScoreFormProps) {
     router.push('/leaderboard')
   }
 
+  // Don't render if loading leaderboard data
+  if (leaderboardLoading) {
+    return null
+  }
+
+  // Don't render if not eligible for leaderboard
+  if (!isEligibleForLeaderboard()) {
+    return null
+  }
+
   return (
     <div className="max-w-lg mx-auto p-8 bg-card/40 backdrop-blur-sm border border-border/40 rounded-xl shadow-lg">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-3">Game Over!</h1>
-        <div className="inline-block mb-2 px-6 py-3 rounded-lg millionaire-gradient">
-          <span className="text-4xl font-bold text-white">${score.toLocaleString()}</span>
-        </div>
-        <p className="text-lg text-foreground/80">
-          {score === 0
-            ? "Better luck next time!"
-            : score < 5000
-              ? "Good effort!"
-              : score < 50000
-                ? "Great job!"
-                : "Outstanding performance!"}
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold mb-4">🎉 Congratulations!</h2>
+        <p className="text-lg text-foreground/80 mb-4">
+          Your score qualifies for the leaderboard!
         </p>
       </div>
 
@@ -88,23 +101,13 @@ export default function ScoreForm({gameId, score}: ScoreFormProps) {
           />
         </div>
 
-        <div className="flex space-x-3">
-          <Button
-            onClick={handleSubmit}
-            disabled={mutation.isPending || !name}
-            className="flex-1 h-12 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90"
-          >
-            {mutation.isPending ? 'Submitting...' : 'Submit Score'}
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={() => router.push('/play/random')}
-            className="h-12"
-          >
-            Play Again
-          </Button>
-        </div>
+        <Button
+          onClick={handleSubmit}
+          disabled={mutation.isPending || !name}
+          className="w-full h-12 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90"
+        >
+          {mutation.isPending ? 'Submitting...' : 'Submit Score'}
+        </Button>
 
         {mutation.isError && (
           <p className="text-center text-red-600 mt-2">
