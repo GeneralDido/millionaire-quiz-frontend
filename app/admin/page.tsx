@@ -4,14 +4,17 @@ import {useEffect, useState} from 'react'
 import {useRouter} from 'next/navigation'
 import {useAdminGenerate} from '@/hooks/useAdminGenerate'
 import {useGamesList, GameListEntry} from '@/hooks/useGamesList'
+import {useAdminDeleteGame} from '@/hooks/useAdminDeleteGame'
 import {Button} from '@/components/ui/button'
+import {DeleteGameDialog} from '@/components/DeleteGameDialog'
 import Link from 'next/link'
 import {formatDate} from '@/utils/format'
-import {Loader2} from 'lucide-react' // Import the spinner icon
+import {Loader2, Trash2} from 'lucide-react'
 
 export default function AdminPage() {
   const router = useRouter()
   const gen = useAdminGenerate()
+  const delGame = useAdminDeleteGame()
   const {data: games, isLoading, error} = useGamesList()
 
   const [checking, setChecking] = useState(true)
@@ -43,6 +46,7 @@ export default function AdminPage() {
           onClick={() => gen.mutate()}
           disabled={gen.isPending}
           className="min-w-[180px] h-10"
+          variant="default"
         >
           {gen.isPending ? (
             <>
@@ -79,16 +83,41 @@ export default function AdminPage() {
         ) : games && games.length > 0 ? (
           <ul className="divide-y divide-border">
             {games.map((g: GameListEntry) => (
-              <li key={g.game_id} className="flex justify-between py-3">
-                <Link
-                  href={`/admin/games/${g.game_id}`}
-                  className="text-primary hover:text-primary/80 hover:underline font-medium"
+              <li key={g.game_id} className="flex justify-between items-center py-3">
+                <div className="flex items-center gap-4">
+                  <Link
+                    href={`/admin/games/${g.game_id}`}
+                    className="text-primary hover:text-primary/80 hover:underline font-medium"
+                  >
+                    Game {g.game_id}
+                  </Link>
+                  <span className="text-sm text-muted-foreground">
+                    {formatDate(g.created_at)}
+                  </span>
+                </div>
+                <DeleteGameDialog
+                  gameId={g.game_id}
+                  onConfirm={() => delGame.mutate(g.game_id)}
                 >
-                  Game {g.game_id}
-                </Link>
-                <span className="text-sm text-muted-foreground">
-                  {formatDate(g.created_at)}
-                </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={delGame.isPending}
+                    className="border-red-200 dark:border-red-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 hover:border-red-300 dark:hover:border-red-600"
+                  >
+                    {delGame.isPending ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-1 animate-spin"/>
+                        Deleting...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="h-4 w-4 mr-1"/>
+                        Delete
+                      </>
+                    )}
+                  </Button>
+                </DeleteGameDialog>
               </li>
             ))}
           </ul>
