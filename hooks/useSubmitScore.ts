@@ -6,7 +6,7 @@ export function useSubmitScore(gameId: number) {
   const qc = useQueryClient()
 
   return useMutation<void, Error, ScoreCreate>({
-    mutationFn: (data) => post<void>(`/games/${gameId}/score/`, data),
+    mutationFn: (data) => post<void>(`/games/${gameId}/score`, data),
     onSuccess: () => {
       void qc.invalidateQueries({queryKey: ['leaderboard']})
     }

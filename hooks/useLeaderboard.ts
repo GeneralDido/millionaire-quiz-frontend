@@ -7,7 +7,7 @@ import type {LeaderboardEntry} from '@/utils/apiTypes'
 export function useLeaderboard(limit = LEADERBOARD_SIZE) {
   return useQuery<LeaderboardEntry[], Error>({
     queryKey: ['leaderboard', limit],
-    queryFn: () => get<LeaderboardEntry[]>(`/leaderboard/?limit=${limit}`),
+    queryFn: () => get<LeaderboardEntry[]>(`/leaderboard?limit=${limit}`),
     staleTime: 1000 * 60 * 5
   })
 }
