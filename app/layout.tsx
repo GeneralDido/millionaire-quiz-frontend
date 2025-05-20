@@ -1,5 +1,6 @@
 // app/layout.tsx
 import '@/styles/globals.css'
+import {SpeedInsights} from "@vercel/speed-insights/next"
 import {Providers} from './providers'
 import Link from 'next/link'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -15,10 +16,10 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
         <header className="py-4 px-6 border-b border-border/50 backdrop-blur-sm bg-background/80 relative">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <span
-                className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
-                Millionaire Quiz
-              </span>
+                <span
+                  className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
+                  Millionaire Quiz
+                </span>
               {/* Desktop navigation - hidden on mobile */}
               <nav className="hidden sm:flex space-x-6 ml-8">
                 <Link href="/" className="text-foreground/80 hover:text-primary transition-colors">Home</Link>
@@ -47,6 +48,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
         </footer>
       </div>
     </Providers>
+    <SpeedInsights/>
     </body>
     </html>
   )
