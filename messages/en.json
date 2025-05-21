@@ -60,6 +60,14 @@
     },
     "bonus": "Bonus"
   },
+  "AdminGameEditor": {
+    "title": "Update Game via AI Prompt",
+    "placeholder": "Enter admin instructions, e.g. 'Change question 6 to a nature question'",
+    "buttonUpdate": "Apply Update",
+    "updating": "Updating...",
+    "successMessage": "Game updated successfully",
+    "errorMessage": "Update failed"
+  },
   "GamePage": {
     "quizNumber": "Quiz #{id}",
     "questionProgress": "Question {current} of {total}",
