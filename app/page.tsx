@@ -47,15 +47,10 @@ export default function Home() {
           {t('playRandom')}
         </Button>
 
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border"></div>
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card border border-border rounded px-3 py-1 text-muted-foreground shadow-sm">
-              {t('orChooseSpecific')}
-            </span>
-          </div>
+        <div className="text-center py-4">
+          <p className="text-sm text-muted-foreground uppercase tracking-wider">
+            {t('orChooseSpecific')}
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -68,7 +63,7 @@ export default function Home() {
           <div className="flex space-x-2">
             <div className="flex-1">
               <Select value={selectedGameId} onValueChange={handleGameSelect}>
-                <SelectTrigger className="h-12 text-lg">
+                <SelectTrigger className="h-12 text-lg bg-card border-border">
                   <SelectValue placeholder={
                     isLoading
                       ? t('loadingQuizzes')
@@ -77,7 +72,7 @@ export default function Home() {
                         : t('selectQuiz')
                   }/>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-card border-border">
                   {games?.map((game) => (
                     <SelectItem key={game.game_id} value={game.game_id.toString()}>
                       <div className="flex flex-col items-start">
@@ -121,7 +116,7 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="h-6 flex justify-center">
+          <div className="h-6">
             {selectedGameId && (
               <p className="text-sm text-green-500">{t('quizSelected')}</p>
             )}
