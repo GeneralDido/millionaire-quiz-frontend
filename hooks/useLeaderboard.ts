@@ -4,10 +4,10 @@ import {get} from '@/utils/api'
 import {LEADERBOARD_SIZE} from '@/utils/game'
 import type {LeaderboardEntry} from '@/utils/apiTypes'
 
-export function useLeaderboard(limit = LEADERBOARD_SIZE) {
+export function useLeaderboard() {
   return useQuery<LeaderboardEntry[], Error>({
-    queryKey: ['leaderboard', limit],
-    queryFn: () => get<LeaderboardEntry[]>(`/leaderboard/?limit=${limit}`),
+    queryKey: ['leaderboard', LEADERBOARD_SIZE],
+    queryFn: () => get<LeaderboardEntry[]>(`/leaderboard/?limit=${LEADERBOARD_SIZE}`),
     staleTime: 1000 * 60 * 5
   })
 }

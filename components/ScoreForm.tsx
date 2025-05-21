@@ -16,18 +16,18 @@ export default function ScoreForm() {
   const [name, setName] = useState('')
   const router = useRouter()
   const mutation = useSubmitScore(gameId)
-  const {data: leaderboard, isLoading: leaderboardLoading} = useLeaderboard(LEADERBOARD_SIZE)
+  const {data: leaderboard, isLoading: leaderboardLoading} = useLeaderboard()
 
   // Check if score is eligible for leaderboard
   const isEligibleForLeaderboard = () => {
     if (!leaderboard) return false
 
-    // If leaderboard has fewer than LEADERBOARD_SIZE entries, always eligible
-    if (leaderboard.length < LEADERBOARD_SIZE) return true
+    // If leaderboard has fewer than LEADERBOARD_SIZE entries and score > 0, eligible
+    if (leaderboard.length < LEADERBOARD_SIZE) return score > 0
 
     // Check if score is higher than the lowest score in leaderboard
     const lowestScore = leaderboard[leaderboard.length - 1]?.best || 0
-    return score > lowestScore
+    return score > lowestScore && score > 0
   }
 
   // Celebration effect for high scores
