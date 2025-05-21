@@ -33,10 +33,10 @@ export default async function RootLayout({children}: { children: React.ReactNode
                   <Link href="/" className="text-foreground/80 hover:text-primary transition-colors">{t('home')}</Link>
                   <Link href="/leaderboard"
                         className="text-foreground/80 hover:text-primary transition-colors">{t('leaderboard')}</Link>
-                  <Link href="/admin"
-                        className="text-foreground/80 hover:text-primary transition-colors">{t('admin')}</Link>
                   <Link href="/how-to-play"
                         className="text-foreground/80 hover:text-primary transition-colors">{t('howToPlay')}</Link>
+                  <Link href="/admin"
+                        className="text-foreground/80 hover:text-primary transition-colors">{t('admin')}</Link>
                 </nav>
               </div>
 
