@@ -1,57 +1,28 @@
 'use client'
 
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import {useRouter} from 'next/navigation'
 import {Button} from '@/components/ui/button'
-import {Input} from '@/components/ui/input'
-import axios from 'axios'
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
+import {useGamesList} from '@/hooks/useGamesList'
+import {formatDate} from '@/utils/format'
 
 export default function Home() {
   const router = useRouter()
-  const [code, setCode] = useState('')
-  const [isValid, setIsValid] = useState<boolean | null>(null)
-  const [isChecking, setIsChecking] = useState(false)
-  const [error, setError] = useState('')
+  const [selectedGameId, setSelectedGameId] = useState<string>('')
 
-  // Handle input change - only allow numbers
-  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Only allow numeric input
-    const numericValue = e.target.value.replace(/\D/g, '')
-    setCode(numericValue)
+  // Fetch the games list
+  const {data: games, isLoading, error} = useGamesList()
+
+  const handleGameSelect = (gameId: string) => {
+    setSelectedGameId(gameId)
   }
 
-  // Validate code whenever it changes
-  useEffect(() => {
-    // Reset validation states when input changes
-    setIsValid(null)
-    setError('')
-
-    // Skip validation for empty input
-    if (!code) return
-
-    // Set checking to true immediately to prevent premature button clicks
-    setIsChecking(true)
-
-    // Debounce validation to avoid too many requests
-    const handler = setTimeout(async () => {
-      try {
-        // Check if game exists using your API
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/games/${code}/exists`)
-        setIsValid(response.data.exists)
-        if (!response.data.exists) {
-          setError('This quiz code does not exist')
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        setIsValid(false)
-        setError('Error checking quiz code')
-      } finally {
-        setIsChecking(false)
-      }
-    }, 500) // Validate after 500ms of no typing
-
-    return () => clearTimeout(handler)
-  }, [code])
+  const handlePlaySelectedGame = () => {
+    if (selectedGameId) {
+      router.push(`/play/${selectedGameId}`)
+    }
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] -mt-16 space-y-12">
@@ -80,37 +51,59 @@ export default function Home() {
             <div className="w-full border-t border-border"></div>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or enter a game code</span>
+            <span className="bg-background px-2 text-muted-foreground">Or choose a specific quiz</span>
           </div>
         </div>
 
         <div className="space-y-2">
+          {/* Fixed-height message container to prevent layout shift */}
+          <div className="h-6">
+            {error && (
+              <p className="text-sm text-red-500">Failed to load quiz list</p>
+            )}
+            {selectedGameId && (
+              <p className="text-sm text-green-500">Quiz selected</p>
+            )}
+          </div>
+
           <div className="flex space-x-2">
             <div className="flex-1">
-              <Input
-                placeholder="Enter quiz code"
-                value={code}
-                onChange={handleCodeChange}
-                inputMode="numeric"
-                pattern="[0-9]*"
-                className={`h-12 text-lg ${isValid === false ? 'border-red-500 focus-visible:ring-red-500' : isValid === true ? 'border-green-500 focus-visible:ring-green-500' : ''}`}
-              />
-              {/* Fixed-height validation message container to prevent layout shift */}
-              <div className="h-6 mt-1">
-                {error && (
-                  <p className="text-sm text-red-500">{error}</p>
-                )}
-                {isValid === true && (
-                  <p className="text-sm text-green-500">Valid quiz code</p>
-                )}
-              </div>
+              <Select value={selectedGameId} onValueChange={handleGameSelect}>
+                <SelectTrigger className="h-12 text-lg">
+                  <SelectValue placeholder={
+                    isLoading
+                      ? "Loading quizzes..."
+                      : error
+                        ? "Error loading quizzes"
+                        : "Select a quiz"
+                  }/>
+                </SelectTrigger>
+                <SelectContent>
+                  {games?.map((game) => (
+                    <SelectItem key={game.game_id} value={game.game_id.toString()}>
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium">Quiz #{game.game_id}</span>
+                        <span className="text-sm text-muted-foreground">
+                          Created: {formatDate(game.created_at)}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                  {games?.length === 0 && (
+                    <SelectItem value="no-games" disabled>
+                      No quizzes available
+                    </SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
             </div>
+
             <Button
-              onClick={() => router.push(`/play/${code}`)}
-              disabled={isChecking || !code || isValid === false}
+              onClick={handlePlaySelectedGame}
+              disabled={!selectedGameId || isLoading || !!error}
               className="px-8 h-12 bg-primary hover:bg-primary/90 transition-colors"
             >
-              {isChecking ? (
+              {isLoading ? (
                 <span className="flex items-center">
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
                        fill="none" viewBox="0 0 24 24">
@@ -119,10 +112,10 @@ export default function Home() {
                     <path className="opacity-75" fill="currentColor"
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Checking
+                  Loading
                 </span>
               ) : (
-                'Go'
+                'Play'
               )}
             </Button>
           </div>
