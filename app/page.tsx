@@ -47,7 +47,7 @@ export default function Home() {
           {t('playRandom')}
         </Button>
 
-        <div className="text-center py-4">
+        <div className="text-center">
           <p className="text-sm text-muted-foreground uppercase tracking-wider">
             {t('orChooseSpecific')}
           </p>

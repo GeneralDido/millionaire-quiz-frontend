@@ -61,6 +61,4 @@
     .millionaire-gradient {
         background: linear-gradient(135deg, var(--millionaire-purple) 0%, var(--millionaire-blue) 100%);
     }
-
-    /* Your other component classes */
 }

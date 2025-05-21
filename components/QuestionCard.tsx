@@ -132,9 +132,7 @@ export default function QuestionCard(props: QuestionCardProps) {
           <AnswerOptions/>
           <HintDisplay/>
         </CardContent>
-
-        <CardFooter
-          className="bg-card/30 backdrop-blur-sm border-t border-border/30 flex flex-col sm:flex-row justify-between gap-3 sm:gap-2">
+        <CardFooter className="bg-card/30 backdrop-blur-sm border-t border-border/30 py-4 flex flex-col sm:flex-row justify-between gap-3 sm:gap-2">
           <LifelinesPanel/>
           {doublePointsActive && (
             <div className="text-money-gold font-medium text-sm animate-pulse text-center sm:text-right"
