@@ -2,6 +2,7 @@
 'use client';
 
 import {useState, useEffect, useMemo} from 'react';
+import {useTranslations} from 'next-intl';
 import type {Question} from '@/utils/apiTypes';
 import {Card, CardHeader, CardContent, CardFooter} from '@/components/ui/card';
 import {QuestionProvider, QuestionContextType, GameLives} from '@/context/QuestionContext';
@@ -39,6 +40,7 @@ export default function QuestionCard(props: QuestionCardProps) {
     startTime,
     pointValue
   } = props;
+  const t = useTranslations('GamePage');
 
   // Single source of truth: always start at full BONUS_TIME
   const [timeLeft, setTimeLeft] = useState(
@@ -137,7 +139,7 @@ export default function QuestionCard(props: QuestionCardProps) {
           {doublePointsActive && (
             <div className="text-money-gold font-medium text-sm animate-pulse text-center sm:text-right"
                  aria-live="polite">
-              Double points available!
+              {t('doublePointsAvailable')}
             </div>
           )}
         </CardFooter>
@@ -145,4 +147,3 @@ export default function QuestionCard(props: QuestionCardProps) {
     </QuestionProvider>
   );
 }
-

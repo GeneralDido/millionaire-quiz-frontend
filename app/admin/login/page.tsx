@@ -1,7 +1,8 @@
 // app/admin/login/page.tsx
 'use client'
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {useRouter} from 'next/navigation'
+import {useTranslations} from 'next-intl'
 import {Input} from '@/components/ui/input'
 import {Button} from '@/components/ui/button'
 import {Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription} from '@/components/ui/card'
@@ -13,6 +14,7 @@ export default function AdminLoginPage() {
   const [err, setErr] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const t = useTranslations('AdminLogin')
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -27,10 +29,10 @@ export default function AdminLoginPage() {
       })
 
       if (res.ok) router.push('/admin')
-      else setErr('Invalid credentials')
+      else setErr(t('invalidCredentials'))
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      setErr('Login failed. Please try again.')
+      setErr(t('loginFailed'))
     } finally {
       setLoading(false)
     }
@@ -43,9 +45,9 @@ export default function AdminLoginPage() {
           <div className="w-16 h-16 bg-primary/10 text-primary rounded-full mx-auto flex items-center justify-center">
             <Lock className="h-8 w-8"/>
           </div>
-          <CardTitle className="text-3xl font-bold tracking-tight">Admin Login</CardTitle>
+          <CardTitle className="text-3xl font-bold tracking-tight">{t('title')}</CardTitle>
           <CardDescription>
-            Enter your credentials to access the admin area
+            {t('description')}
           </CardDescription>
         </CardHeader>
 
@@ -54,11 +56,11 @@ export default function AdminLoginPage() {
             <div className="space-y-2">
               <label htmlFor="username"
                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Username
+                {t('username')}
               </label>
               <Input
                 id="username"
-                placeholder="Enter your username"
+                placeholder={t('usernamePlaceholder')}
                 value={user}
                 onChange={(e) => setUser(e.target.value)}
                 required
@@ -69,12 +71,12 @@ export default function AdminLoginPage() {
             <div className="space-y-2">
               <label htmlFor="password"
                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Password
+                {t('password')}
               </label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder={t('passwordPlaceholder')}
                 value={pass}
                 onChange={(e) => setPass(e.target.value)}
                 required
@@ -105,10 +107,10 @@ export default function AdminLoginPage() {
                   <path className="opacity-75" fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Logging in...
+                {t('loggingIn')}
               </span>
             ) : (
-              'Log in'
+              t('logIn')
             )}
           </Button>
         </CardFooter>

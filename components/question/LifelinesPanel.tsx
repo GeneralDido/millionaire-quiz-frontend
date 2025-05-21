@@ -1,4 +1,5 @@
 // components/question/LifelinesPanel.tsx
+import {useTranslations} from 'next-intl';
 import {Button} from '@/components/ui/button';
 import {SplitSquareVertical, HelpCircle, Shuffle} from 'lucide-react';
 import {useQuestion} from '@/context/QuestionContext';
@@ -12,6 +13,7 @@ export function LifelinesPanel() {
     selectedAnswer,
     bonusQuestionAvailable
   } = useQuestion();
+  const t = useTranslations('Lifelines');
 
   return (
     <div className="flex space-x-2">
@@ -23,7 +25,7 @@ export function LifelinesPanel() {
         className={`lifeline-btn gap-1 ${!lives.fifty ? 'lifeline-btn-disabled' : ''}`}
       >
         <SplitSquareVertical className="h-4 w-4"/>
-        <span className="hidden sm:inline">50:50</span>
+        <span className="hidden sm:inline">{t('fiftyFifty')}</span>
       </Button>
       <Button
         size="sm"
@@ -33,7 +35,7 @@ export function LifelinesPanel() {
         className={`lifeline-btn gap-1 ${!lives.hint ? 'lifeline-btn-disabled' : ''}`}
       >
         <HelpCircle className="h-4 w-4"/>
-        <span className="hidden sm:inline">Hint</span>
+        <span className="hidden sm:inline">{t('hint')}</span>
       </Button>
       <Button
         size="sm"
@@ -43,7 +45,7 @@ export function LifelinesPanel() {
         className={`lifeline-btn gap-1 ${!lives.change ? 'lifeline-btn-disabled' : ''}`}
       >
         <Shuffle className="h-4 w-4"/>
-        <span className="hidden sm:inline">Change</span>
+        <span className="hidden sm:inline">{t('change')}</span>
       </Button>
     </div>
   );

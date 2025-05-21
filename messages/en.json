@@ -1,0 +1,134 @@
+{
+  "HomePage": {
+    "title": "Millionaire",
+    "subtitle": "Quiz Game",
+    "description": "Test your knowledge and climb to the top of the leaderboard!",
+    "playRandom": "Play Random Quiz",
+    "orChooseSpecific": "Or choose a specific quiz",
+    "selectQuiz": "Select a quiz",
+    "loadingQuizzes": "Loading quizzes...",
+    "errorLoadingQuizzes": "Error loading quizzes",
+    "quizSelected": "Quiz selected",
+    "failedToLoadQuizList": "Failed to load quiz list",
+    "noQuizzesAvailable": "No quizzes available",
+    "play": "Play",
+    "loading": "Loading",
+    "quizNumber": "Quiz #{id}",
+    "created": "Created: {date}"
+  },
+  "AdminLogin": {
+    "title": "Admin Login",
+    "description": "Enter your credentials to access the admin area",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "invalidCredentials": "Invalid credentials",
+    "loginFailed": "Login failed. Please try again.",
+    "loggingIn": "Logging in...",
+    "logIn": "Log in"
+  },
+  "AdminDashboard": {
+    "verifyingCredentials": "Verifying credentials...",
+    "title": "Admin Dashboard",
+    "gameGenerator": "Game Generator",
+    "generating": "Generating...",
+    "generateNewGame": "Generate New Game",
+    "gameGenerated": "Game successfully generated!",
+    "errorGenerating": "Error generating game",
+    "existingGames": "Existing Games",
+    "errorLoadingGames": "Error loading games",
+    "gameNumber": "Game {id}",
+    "noGamesFound": "No games found",
+    "deleting": "Deleting...",
+    "delete": "Delete"
+  },
+  "AdminGameDetail": {
+    "loadingGame": "Loading game…",
+    "errorLoading": "Error loading game #{gameId}",
+    "backToAdmin": "Back to Admin",
+    "deleteGame": "Delete Game",
+    "gameOverview": "Game {id} — Questions Overview",
+    "tableHeaders": {
+      "number": "#",
+      "category": "Category",
+      "difficulty": "Difficulty",
+      "question": "Question",
+      "correct": "Correct",
+      "wrong": "Wrong",
+      "hint": "Hint"
+    },
+    "bonus": "Bonus"
+  },
+  "GamePage": {
+    "quizNumber": "Quiz #{id}",
+    "questionProgress": "Question {current} of {total}",
+    "currentScore": "Current score: {score} dollars",
+    "quizProgress": "Quiz progress: {progress}%",
+    "errorLoadingQuiz": "Error Loading Quiz",
+    "returnHome": "Return Home",
+    "returnHomeAriaLabel": "Return to home page",
+    "noQuizFound": "No quiz found",
+    "prizeLadder": "Prize Ladder",
+    "questionNumber": "Question {number}",
+    "doublePointsAvailable": "Double points available!",
+    "doublePointsTime": "Double points: {time}s"
+  },
+  "Lifelines": {
+    "fiftyFifty": "50:50",
+    "hint": "Hint",
+    "change": "Change"
+  },
+  "Leaderboard": {
+    "title": "Leaderboard",
+    "loading": "Loading leaderboard…",
+    "error": "Error loading leaderboard.",
+    "rank": "Rank",
+    "player": "Player",
+    "gameNumber": "Game #",
+    "score": "Score",
+    "date": "Date",
+    "noScores": "No scores recorded yet. Be the first to play!"
+  },
+  "DeleteDialog": {
+    "title": "Delete Game {id}",
+    "description": "Are you sure you want to delete this game? This will permanently remove the game and all its scores. This action cannot be undone.",
+    "cancel": "Cancel",
+    "delete": "Delete Game"
+  },
+  "PlayAgain": {
+    "gameOver": "Game Over!",
+    "encouragement": {
+      "betterLuck": "Better luck next time!",
+      "goodEffort": "Good effort!",
+      "greatJob": "Great job!",
+      "outstanding": "Outstanding performance!"
+    },
+    "playAgain": "Play Again"
+  },
+  "ScoreForm": {
+    "congratulations": "🎉 Congratulations!",
+    "qualifiesForLeaderboard": "Your score qualifies for the leaderboard!",
+    "enterName": "Enter your name to join the leaderboard",
+    "namePlaceholder": "Your name",
+    "submitting": "Submitting...",
+    "submitScore": "Submit Score",
+    "submitError": "Error submitting score. Please try again."
+  },
+  "Navigation": {
+    "home": "Home",
+    "leaderboard": "Leaderboard",
+    "admin": "Admin",
+    "millionaireQuiz": "Millionaire Quiz"
+  },
+  "Footer": {
+    "copyright": "Millionaire Quiz Game © {year}"
+  },
+  "Common": {
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "loading": "Loading"
+  }
+}

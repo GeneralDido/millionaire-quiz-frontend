@@ -1,4 +1,5 @@
 // components/DeleteGameDialog.tsx
+import {useTranslations} from 'next-intl'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +20,8 @@ interface DeleteGameDialogProps {
 }
 
 export function DeleteGameDialog({gameId, onConfirm, children}: DeleteGameDialogProps) {
+  const t = useTranslations('DeleteDialog')
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -26,19 +29,18 @@ export function DeleteGameDialog({gameId, onConfirm, children}: DeleteGameDialog
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Game {gameId}</AlertDialogTitle>
+          <AlertDialogTitle>{t('title', {id: gameId})}</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this game? This will permanently remove the game and all its scores. This
-            action cannot be undone.
+            {t('description')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex justify-center items-center gap-3 sm:justify-center">
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             className="bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-400"
           >
-            Delete Game
+            {t('delete')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -2,6 +2,7 @@
 
 import React, {useState} from 'react'
 import {useRouter} from 'next/navigation'
+import {useTranslations} from 'next-intl'
 import {Button} from '@/components/ui/button'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
 import {useGamesList} from '@/hooks/useGamesList'
@@ -10,8 +11,8 @@ import {formatDate} from '@/utils/format'
 export default function Home() {
   const router = useRouter()
   const [selectedGameId, setSelectedGameId] = useState<string>('')
+  const t = useTranslations('HomePage')
 
-  // Fetch the games list
   const {data: games, isLoading, error} = useGamesList()
 
   const handleGameSelect = (gameId: string) => {
@@ -29,12 +30,12 @@ export default function Home() {
       <div className="text-center space-y-6">
         <h1 className="text-6xl sm:text-7xl font-extrabold tracking-tight">
           <span className="block bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
-            Millionaire
+            {t('title')}
           </span>
-          <span className="block text-foreground">Quiz Game</span>
+          <span className="block text-foreground">{t('subtitle')}</span>
         </h1>
         <p className="max-w-md mx-auto text-lg text-foreground/70">
-          Test your knowledge and climb to the top of the leaderboard!
+          {t('description')}
         </p>
       </div>
 
@@ -43,7 +44,7 @@ export default function Home() {
           onClick={() => router.push('/play/random')}
           className="w-full h-16 text-xl shadow-lg bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 transition-all"
         >
-          Play Random Quiz
+          {t('playRandom')}
         </Button>
 
         <div className="relative">
@@ -51,18 +52,19 @@ export default function Home() {
             <div className="w-full border-t border-border"></div>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or choose a specific quiz</span>
+            <span className="bg-background px-2 text-muted-foreground">
+              {t('orChooseSpecific')}
+            </span>
           </div>
         </div>
 
         <div className="space-y-2">
-          {/* Fixed-height message container to prevent layout shift */}
           <div className="h-6">
             {error && (
-              <p className="text-sm text-red-500">Failed to load quiz list</p>
+              <p className="text-sm text-red-500">{t('failedToLoadQuizList')}</p>
             )}
             {selectedGameId && (
-              <p className="text-sm text-green-500">Quiz selected</p>
+              <p className="text-sm text-green-500">{t('quizSelected')}</p>
             )}
           </div>
 
@@ -72,26 +74,28 @@ export default function Home() {
                 <SelectTrigger className="h-12 text-lg">
                   <SelectValue placeholder={
                     isLoading
-                      ? "Loading quizzes..."
+                      ? t('loadingQuizzes')
                       : error
-                        ? "Error loading quizzes"
-                        : "Select a quiz"
+                        ? t('errorLoadingQuizzes')
+                        : t('selectQuiz')
                   }/>
                 </SelectTrigger>
                 <SelectContent>
                   {games?.map((game) => (
                     <SelectItem key={game.game_id} value={game.game_id.toString()}>
                       <div className="flex flex-col items-start">
-                        <span className="font-medium">Quiz #{game.game_id}</span>
+                        <span className="font-medium">
+                          {t('quizNumber', {id: game.game_id})}
+                        </span>
                         <span className="text-sm text-muted-foreground">
-                          Created: {formatDate(game.created_at)}
+                          {t('created', {date: formatDate(game.created_at)})}
                         </span>
                       </div>
                     </SelectItem>
                   ))}
                   {games?.length === 0 && (
                     <SelectItem value="no-games" disabled>
-                      No quizzes available
+                      {t('noQuizzesAvailable')}
                     </SelectItem>
                   )}
                 </SelectContent>
@@ -107,15 +111,15 @@ export default function Home() {
                 <span className="flex items-center">
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
                        fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                            strokeWidth="4"></circle>
+                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                           strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor"
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Loading
+                  {t('loading')}
                 </span>
               ) : (
-                'Play'
+                t('play')
               )}
             </Button>
           </div>

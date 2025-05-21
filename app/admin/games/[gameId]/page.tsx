@@ -1,6 +1,7 @@
 // app/admin/games/[gameId]/page.tsx
 'use client'
 import {useParams, useRouter} from 'next/navigation'
+import {useTranslations} from 'next-intl'
 import {useGame} from '@/hooks/useGame'
 import {useAdminDeleteGame} from '@/hooks/useAdminDeleteGame'
 import {
@@ -22,12 +23,13 @@ export default function AdminGameDetail() {
   const router = useRouter()
   const {data: game, isLoading, error} = useGame(id)
   const delGame = useAdminDeleteGame()
+  const t = useTranslations('AdminGameDetail')
 
-  if (isLoading) return <p>Loading game…</p>
+  if (isLoading) return <p>{t('loadingGame')}</p>
   if (error || !game)
     return (
       <p className="text-center text-red-600">
-        Error loading game #{gameId}
+        {t('errorLoading', {gameId})}
       </p>
     )
 
@@ -40,7 +42,7 @@ export default function AdminGameDetail() {
           className="text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="mr-2 h-4 w-4"/>
-          Back to Admin
+          {t('backToAdmin')}
         </Button>
 
         <DeleteGameDialog
@@ -57,12 +59,12 @@ export default function AdminGameDetail() {
             {delGame.isPending ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin"/>
-                Deleting...
+                {t('deleting')}
               </>
             ) : (
               <>
                 <Trash2 className="h-4 w-4 mr-2"/>
-                Delete Game
+                {t('deleteGame')}
               </>
             )}
           </Button>
@@ -70,19 +72,19 @@ export default function AdminGameDetail() {
       </div>
 
       <h1 className="text-2xl font-bold">
-        Game {game.game_id} — Questions Overview
+        {t('gameOverview', {id: game.game_id})}
       </h1>
 
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>#</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Difficulty</TableHead>
-            <TableHead>Question</TableHead>
-            <TableHead>Correct</TableHead>
-            <TableHead>Wrong</TableHead>
-            <TableHead>Hint</TableHead>
+            <TableHead>{t('tableHeaders.number')}</TableHead>
+            <TableHead>{t('tableHeaders.category')}</TableHead>
+            <TableHead>{t('tableHeaders.difficulty')}</TableHead>
+            <TableHead>{t('tableHeaders.question')}</TableHead>
+            <TableHead>{t('tableHeaders.correct')}</TableHead>
+            <TableHead>{t('tableHeaders.wrong')}</TableHead>
+            <TableHead>{t('tableHeaders.hint')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -100,7 +102,7 @@ export default function AdminGameDetail() {
 
           {game.bonus_question && (
             <TableRow key="bonus">
-              <TableCell>Bonus</TableCell>
+              <TableCell>{t('bonus')}</TableCell>
               <TableCell>{game.bonus_question.category}</TableCell>
               <TableCell>{game.bonus_question.difficulty}</TableCell>
               <TableCell>{game.bonus_question.q}</TableCell>

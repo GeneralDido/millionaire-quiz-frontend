@@ -2,6 +2,7 @@
 'use client'
 
 import {useState, useEffect} from 'react'
+import {useTranslations} from 'next-intl'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {useSubmitScore} from '@/hooks/useSubmitScore'
@@ -17,6 +18,7 @@ export default function ScoreForm() {
   const router = useRouter()
   const mutation = useSubmitScore(gameId)
   const {data: leaderboard, isLoading: leaderboardLoading} = useLeaderboard()
+  const t = useTranslations('ScoreForm')
 
   // Check if score is eligible for leaderboard
   const isEligibleForLeaderboard = () => {
@@ -81,20 +83,20 @@ export default function ScoreForm() {
   return (
     <div className="max-w-lg mx-auto p-8 bg-card/40 backdrop-blur-sm border border-border/40 rounded-xl shadow-lg">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold mb-4">🎉 Congratulations!</h2>
+        <h2 className="text-2xl font-bold mb-4">{t('congratulations')}</h2>
         <p className="text-lg text-foreground/80 mb-4">
-          Your score qualifies for the leaderboard!
+          {t('qualifiesForLeaderboard')}
         </p>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-2">
           <label htmlFor="player-name" className="block text-sm font-medium">
-            Enter your name to join the leaderboard
+            {t('enterName')}
           </label>
           <Input
             id="player-name"
-            placeholder="Your name"
+            placeholder={t('namePlaceholder')}
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="h-12 text-lg"
@@ -106,12 +108,12 @@ export default function ScoreForm() {
           disabled={mutation.isPending || !name}
           className="w-full h-12 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90"
         >
-          {mutation.isPending ? 'Submitting...' : 'Submit Score'}
+          {mutation.isPending ? t('submitting') : t('submitScore')}
         </Button>
 
         {mutation.isError && (
           <p className="text-center text-red-600 mt-2">
-            Error submitting score. Please try again.
+            {t('submitError')}
           </p>
         )}
       </div>

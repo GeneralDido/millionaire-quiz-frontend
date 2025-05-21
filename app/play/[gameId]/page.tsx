@@ -2,6 +2,7 @@
 'use client';
 
 import {useParams, useRouter} from 'next/navigation';
+import {useTranslations} from 'next-intl';
 import {useGame} from '@/hooks/useGame';
 import QuestionCard from '@/components/QuestionCard';
 import QuestionCardSkeleton from '@/components/QuestionCardSkeleton';
@@ -14,6 +15,7 @@ export default function PlayPage() {
   const params = useParams();
   const gameId = params?.gameId ? String(params.gameId) : 'random';
   const router = useRouter();
+  const t = useTranslations('GamePage');
 
   // If gameId === 'random' we fetch via /games/random; otherwise /games/{id}
   const parsedId = gameId === 'random' ? undefined : Number(gameId);
@@ -97,14 +99,14 @@ export default function PlayPage() {
             <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
         </div>
-        <h2 className="text-xl font-semibold mb-2">Error Loading Quiz</h2>
+        <h2 className="text-xl font-semibold mb-2">{t('errorLoadingQuiz')}</h2>
         <p className="text-red-600 mb-4">{error.message}</p>
         <button
           onClick={() => router.push('/')}
           className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-          aria-label="Return to home page"
+          aria-label={t('returnHomeAriaLabel')}
         >
-          Return Home
+          {t('returnHome')}
         </button>
       </div>
     );
@@ -114,13 +116,13 @@ export default function PlayPage() {
   if (!game) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <h2 className="text-xl font-semibold mb-4">No quiz found</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('noQuizFound')}</h2>
         <button
           onClick={() => router.push('/')}
           className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-          aria-label="Return to home page"
+          aria-label={t('returnHomeAriaLabel')}
         >
-          Return Home
+          {t('returnHome')}
         </button>
       </div>
     );
@@ -134,12 +136,12 @@ export default function PlayPage() {
       <div className="mb-10">
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center gap-2">
-            <h2 className="font-semibold text-xl">Quiz #{game.game_id}</h2>
+            <h2 className="font-semibold text-xl">{t('quizNumber', {id: game.game_id})}</h2>
             <span className="text-sm px-2 py-1 bg-primary/10 text-primary rounded-full">
-              Question {idx + 1} of {maxQuestions}
+              {t('questionProgress', {current: idx + 1, total: maxQuestions})}
             </span>
           </div>
-          <div className="money-text text-2xl font-mono" aria-label={`Current score: ${score} dollars`}>
+          <div className="money-text text-2xl font-mono" aria-label={t('currentScore', {score})}>
             ${score.toLocaleString()}
           </div>
         </div>
@@ -150,7 +152,7 @@ export default function PlayPage() {
           aria-valuenow={progressPercent}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label={`Quiz progress: ${progressPercent}%`}
+          aria-label={t('quizProgress', {progress: progressPercent})}
         >
           <div
             className="absolute h-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-500 ease-out"
@@ -177,7 +179,7 @@ export default function PlayPage() {
 
       <div className="mt-10 max-w-md mx-auto">
         <div className="bg-card/50 backdrop-blur-sm border border-border/40 rounded-lg p-4">
-          <h3 className="text-center font-medium mb-3">Prize Ladder</h3>
+          <h3 className="text-center font-medium mb-3">{t('prizeLadder')}</h3>
           <div className="space-y-1">
             {POINT_VALUES.slice(0, maxQuestions).reverse().map((value, i) => {
               const questionIdx = maxQuestions - 1 - i;
@@ -196,7 +198,7 @@ export default function PlayPage() {
                   }`}
                   aria-current={isCurrentQuestion ? 'true' : 'false'}
                 >
-                  <span>Question {questionIdx + 1}</span>
+                  <span>{t('questionNumber', {number: questionIdx + 1})}</span>
                   <span className={isPastQuestion ? '' : 'money-text'}>
                     ${value.toLocaleString()}
                   </span>

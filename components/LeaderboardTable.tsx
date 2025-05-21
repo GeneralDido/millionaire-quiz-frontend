@@ -1,6 +1,7 @@
-// Improved LeaderboardTable.tsx
+// components/LeaderboardTable.tsx
 'use client'
 
+import {useTranslations} from 'next-intl'
 import type {LeaderboardEntry} from '@/utils/apiTypes'
 import {Card, CardHeader, CardContent} from '@/components/ui/card'
 import {
@@ -19,23 +20,25 @@ interface LeaderboardTableProps {
 }
 
 export default function LeaderboardTable({entries}: LeaderboardTableProps) {
+  const t = useTranslations('Leaderboard')
+
   return (
     <Card className="max-w-4xl mx-auto overflow-hidden">
       <CardHeader className="millionaire-gradient">
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
           <Trophy className="w-6 h-6"/>
-          Leaderboard
+          {t('title')}
         </h2>
       </CardHeader>
       <CardContent className="p-0">
         <Table>
           <TableHeader className="bg-muted/50">
             <TableRow>
-              <TableHead className="w-16 text-center">Rank</TableHead>
-              <TableHead>Player</TableHead>
-              <TableHead className="text-center">Game #</TableHead>
-              <TableHead className="text-right">Score</TableHead>
-              <TableHead className="hidden md:table-cell">Date</TableHead>
+              <TableHead className="w-16 text-center">{t('rank')}</TableHead>
+              <TableHead>{t('player')}</TableHead>
+              <TableHead className="text-center">{t('gameNumber')}</TableHead>
+              <TableHead className="text-right">{t('score')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('date')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -74,7 +77,7 @@ export default function LeaderboardTable({entries}: LeaderboardTableProps) {
             {entries.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                  No scores recorded yet. Be the first to play!
+                  {t('noScores')}
                 </TableCell>
               </TableRow>
             )}
