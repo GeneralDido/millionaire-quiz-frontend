@@ -4,7 +4,7 @@ import {cookies} from 'next/headers'
 
 export async function PUT(
   request: NextRequest,
-  {params}: { params: { gameId: string } }
+  {params}: { params: Promise<{ gameId: string }> }
 ) {
   // --- auth check ---
   const cookieStore = await cookies()
@@ -12,10 +12,10 @@ export async function PUT(
     return NextResponse.json({error: 'Unauthorized'}, {status: 401})
   }
 
-  // pull out the single string param
-  const {gameId} = params
+  // await the params to get the gameId
+  const {gameId} = await params
 
-  // forward the admin’s JSON body to your backend
+  // forward the administrator's JSON body to your backend
   const body = await request.json()
   const base = process.env.NEXT_PUBLIC_API_BASE_URL!
   const adminKey = process.env.ADMIN_API_KEY!
@@ -33,6 +33,6 @@ export async function PUT(
   if (!res.ok) {
     return NextResponse.json({error: text || 'Update failed'}, {status: res.status})
   }
-  // parse the backend’s JSON-string payload and return
+  // parse the backend's JSON-string payload and return
   return NextResponse.json(JSON.parse(text), {status: res.status})
 }
