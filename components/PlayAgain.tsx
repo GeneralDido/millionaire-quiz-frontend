@@ -22,7 +22,7 @@ export default function PlayAgain() {
     <div className="max-w-lg mx-auto p-8 bg-card/40 backdrop-blur-sm border border-border/40 rounded-xl shadow-lg">
       <div className="text-center mb-6">
         <h1 className="text-3xl font-bold mb-4">{t('gameOver')}</h1>
-        <div className="inline-block mb-4 px-6 py-3 rounded-lg millionaire-gradient">
+        <div className="inline-block mb-4 px-6 py-3 rounded-lg peak-puzzler-gradient">
           <span className="text-4xl font-bold text-white">${score.toLocaleString()}</span>
         </div>
         <p className="text-lg text-foreground/80">

@@ -1,8 +1,8 @@
 {
   "HomePage": {
-    "title": "Millionaire",
+    "title": "PeakPuzzler",
     "subtitle": "Quiz Game",
-    "description": "Test your knowledge and climb to the top of the leaderboard!",
+    "description": "Test your knowledge and climb to the peak of the leaderboard!",
     "playRandom": "Play Random Quiz",
     "orChooseSpecific": "Or choose a specific quiz",
     "selectQuiz": "Select a quiz",
@@ -119,11 +119,11 @@
     "home": "Home",
     "leaderboard": "Leaderboard",
     "admin": "Admin",
-    "millionaireQuiz": "Millionaire Quiz",
+    "PeakPuzzlerQuiz": "PeakPuzzler Quiz",
     "howToPlay": "How to Play"
   },
   "Footer": {
-    "copyright": "Millionaire Quiz Game © {year}"
+    "copyright": "PeakPuzzler Quiz Game © {year}"
   },
   "Common": {
     "back": "Back",
@@ -134,10 +134,10 @@
   },
   "HowToPlay": {
     "title": "How to Play",
-    "subtitle": "Game Rules",
+    "subtitle": "PeakPuzzler Game Rules",
     "introduction": "Test your knowledge with our challenging questions to climb to the top of the ladder!",
     "basicRules": "Basic Rules",
-    "rulesIntro": "The Millionaire Quiz game follows these simple rules:",
+    "rulesIntro": "The PeakPuzzler Quiz game follows these simple rules:",
     "rulesList": [
       "Answer 15 increasingly difficult questions correctly to win",
       "Each question has 4 possible answers, but only 1 is correct",
@@ -155,9 +155,9 @@
     "points": "Points and Scoring",
     "pointsIntro": "The point values increase as you progress through the game:",
     "pointsList": [
-      "Questions 1-5: $100 to $1,000",
-      "Questions 6-10: $2,000 to $32,000",
-      "Questions 11-15: $64,000 to $1,000,000"
+      "Questions 1-5: 100 to 1,000",
+      "Questions 6-10: 2,000 to 32,000",
+      "Questions 11-15: 64,000 to 1,000,000"
     ],
     "bonusPoints": "Answering questions quickly can earn you double points for a limited time!",
     "leaderboard": "Leaderboard",

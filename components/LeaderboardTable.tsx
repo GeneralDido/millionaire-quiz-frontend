@@ -24,7 +24,7 @@ export default function LeaderboardTable({entries}: LeaderboardTableProps) {
 
   return (
     <Card className="max-w-4xl mx-auto overflow-hidden">
-      <CardHeader className="millionaire-gradient">
+      <CardHeader className="peak-puzzler-gradient">
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
           <Trophy className="w-6 h-6"/>
           {t('title')}
@@ -67,7 +67,7 @@ export default function LeaderboardTable({entries}: LeaderboardTableProps) {
                 <TableCell className="font-medium">{entry.player}</TableCell>
                 <TableCell className="text-center">{entry.game_id}</TableCell>
                 <TableCell className="font-mono text-right">
-                  ${entry.best.toLocaleString()}
+                  {entry.best.toLocaleString()}
                 </TableCell>
                 <TableCell className="hidden md:table-cell text-muted-foreground">
                   {formatDate(entry.played_at)}

@@ -26,7 +26,7 @@ export default async function RootLayout({children}: { children: React.ReactNode
               <div className="flex items-center gap-2">
                 <span
                   className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
-                  {t('millionaireQuiz')}
+                  {t('PeakPuzzlerQuiz')}
                 </span>
                 {/* Desktop navigation - hidden on mobile */}
                 <nav className="hidden sm:flex space-x-6 ml-8">

@@ -5,7 +5,7 @@ import {Skeleton} from '@/components/ui/skeleton';
 export default function QuestionCardSkeleton() {
   return (
     <Card className="question-card max-w-2xl mx-auto overflow-hidden">
-      <div className="absolute inset-0 millionaire-gradient opacity-10 pointer-events-none"/>
+      <div className="absolute inset-0 peak-puzzler-gradient opacity-10 pointer-events-none"/>
 
       <CardHeader className="bg-card/30 backdrop-blur-sm border-b border-border/30">
         <div className="flex justify-between items-center mb-2">

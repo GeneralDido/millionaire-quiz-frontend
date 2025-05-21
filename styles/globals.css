@@ -21,8 +21,8 @@
     --border: #e2e8f0;
     --input: #e2e8f0;
     --ring: #93c5fd;
-    --millionaire-blue: #000840;
-    --millionaire-purple: #3b0764;
+    --peak-puzzler-blue: #000840;
+    --peak-puzzler-purple: #3b0764;
     --money-green: #10b981;
     --money-gold: #b45309;
 }
@@ -45,8 +45,8 @@
     --border: #1e293b;
     --input: #1e293b;
     --ring: #1e40af;
-    --millionaire-blue: #2563eb;
-    --millionaire-purple: #8b5cf6;
+    --peak-puzzler-blue: #2563eb;
+    --peak-puzzler-purple: #8b5cf6;
     --money-green: #10b981;
     --money-gold: #fbbf24;
 }
@@ -58,7 +58,7 @@
 }
 
 @layer components {
-    .millionaire-gradient {
-        background: linear-gradient(135deg, var(--millionaire-purple) 0%, var(--millionaire-blue) 100%);
+    .peak-puzzler-gradient {
+        background: linear-gradient(135deg, var(--peak-puzzler-purple) 0%, var(--peak-puzzler-blue) 100%);
     }
 }

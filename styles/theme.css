@@ -31,8 +31,8 @@
     --ring: #93c5fd;
 
     /* Game-specific colors */
-    --millionaire-blue: #000840;
-    --millionaire-purple: #3b0764;
+    --peak-puzzler-blue: #000840;
+    --peak-puzzler-purple: #3b0764;
     --money-green: #10b981;
     --money-gold: #fbbf24;
 }
@@ -59,8 +59,8 @@
     --ring: #1e40af;
 
     /* Game-specific colors */
-    --millionaire-blue: #2563eb;
-    --millionaire-purple: #8b5cf6;
+    --peak-puzzler-blue: #2563eb;
+    --peak-puzzler-purple: #8b5cf6;
     --money-green: #10b981;
     --money-gold: #fbbf24;
 }
@@ -72,8 +72,8 @@
 }
 
 @layer components {
-    .millionaire-gradient {
-        background: linear-gradient(135deg, var(--millionaire-purple) 0%, var(--millionaire-blue) 100%);
+    .peak-puzzler-gradient {
+        background: linear-gradient(135deg, var(--peak-puzzler-purple) 0%, var(--peak-puzzler-blue) 100%);
     }
 
     .question-card {

@@ -1,4 +1,4 @@
-# Millionaire Quiz Game
+# PeakPuzzler Quiz Game
 
 A modern, interactive "Who Wants to Be a Millionaire" style quiz game built with Next.js, React, and TypeScript.
 
