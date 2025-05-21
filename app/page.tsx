@@ -52,7 +52,7 @@ export default function Home() {
             <div className="w-full border-t border-border"></div>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
+            <span className="bg-card border border-border rounded px-3 py-1 text-muted-foreground shadow-sm">
               {t('orChooseSpecific')}
             </span>
           </div>
@@ -62,9 +62,6 @@ export default function Home() {
           <div className="h-6">
             {error && (
               <p className="text-sm text-red-500">{t('failedToLoadQuizList')}</p>
-            )}
-            {selectedGameId && (
-              <p className="text-sm text-green-500">{t('quizSelected')}</p>
             )}
           </div>
 
@@ -122,6 +119,12 @@ export default function Home() {
                 t('play')
               )}
             </Button>
+          </div>
+
+          <div className="h-6 flex justify-center">
+            {selectedGameId && (
+              <p className="text-sm text-green-500">{t('quizSelected')}</p>
+            )}
           </div>
         </div>
       </div>
