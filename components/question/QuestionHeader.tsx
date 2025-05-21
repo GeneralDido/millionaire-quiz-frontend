@@ -14,6 +14,9 @@ export function QuestionHeader() {
   } = useQuestion();
   const t = useTranslations('GamePage');
 
+  // Calculate percentage with precise decimal values
+  const progressPercentage = (timeLeft * 100) / bonusTime;
+
   return (
     <>
       <div className="flex justify-between items-center mb-2">
@@ -22,7 +25,7 @@ export function QuestionHeader() {
           <p className="money-text text-xl sm:text-2xl font-medium">${pointValue.toLocaleString()}</p>
           {doublePointsActive && (
             <p className="text-money-gold text-sm font-medium animate-pulse">
-              {t('doublePointsTime', {time: timeLeft})}
+              {t('doublePointsTime', {time: Math.ceil(timeLeft)})}
             </p>
           )}
         </div>
@@ -30,8 +33,8 @@ export function QuestionHeader() {
 
       {doublePointsActive && (
         <Progress
-          value={(timeLeft * 100) / bonusTime}
-          className="h-2 bg-background/30 [&>div]:bg-gradient-to-r [&>div]:from-money-gold [&>div]:to-money-green"
+          value={progressPercentage}
+          className="h-2 bg-background/30 [&>div]:bg-gradient-to-r [&>div]:from-money-gold [&>div]:to-money-green [&>div]:transition-all [&>div]:duration-100 [&>div]:ease-linear"
         />
       )}
 

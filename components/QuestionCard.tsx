@@ -45,7 +45,7 @@ export default function QuestionCard(props: QuestionCardProps) {
   // Single source of truth: always start at full BONUS_TIME
   const [timeLeft, setTimeLeft] = useState(
     startTime
-      ? Math.max(BONUS_TIME - Math.floor((Date.now() - startTime) / 1000), 0)
+      ? Math.max(BONUS_TIME - (Date.now() - startTime) / 1000, 0)
       : BONUS_TIME
   );
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -66,13 +66,21 @@ export default function QuestionCard(props: QuestionCardProps) {
   // tick down the timer every second
   useEffect(() => {
     if (startTime > 0) {
-      const id = window.setInterval(() => {
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      // Use requestAnimationFrame for smoother animation
+      let animationFrameId: number;
+
+      const updateTimer = () => {
+        const elapsed = (Date.now() - startTime) / 1000;
         setTimeLeft(Math.max(BONUS_TIME - elapsed, 0));
-      }, 1000);
-      return () => clearInterval(id);
+        animationFrameId = requestAnimationFrame(updateTimer);
+      };
+
+      animationFrameId = requestAnimationFrame(updateTimer);
+
+      return () => cancelAnimationFrame(animationFrameId);
     }
   }, [startTime]);
+
 
   // true Fisher–Yates shuffle
   const answers = useMemo(() => {
@@ -132,7 +140,8 @@ export default function QuestionCard(props: QuestionCardProps) {
           <AnswerOptions/>
           <HintDisplay/>
         </CardContent>
-        <CardFooter className="bg-card/30 backdrop-blur-sm border-t border-border/30 py-4 flex flex-col sm:flex-row justify-between gap-3 sm:gap-2">
+        <CardFooter
+          className="bg-card/30 backdrop-blur-sm border-t border-border/30 py-4 flex flex-col sm:flex-row justify-between gap-3 sm:gap-2">
           <LifelinesPanel/>
           {doublePointsActive && (
             <div className="text-money-gold font-medium text-sm animate-pulse text-center sm:text-right"
