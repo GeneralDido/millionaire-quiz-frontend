@@ -9,7 +9,8 @@ import {Button} from '@/components/ui/button'
 const navLinks = [
   {href: '/', label: 'Home'},
   {href: '/leaderboard', label: 'Leaderboard'},
-  {href: '/admin', label: 'Admin'}
+  {href: '/admin', label: 'Admin'},
+  {href: '/how-to-play', label: 'How to Play'}
 ]
 
 export default function MobileNavigation() {
