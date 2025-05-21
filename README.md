@@ -44,8 +44,8 @@ Before you begin, ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/millionaire-quiz-game.git
-   cd millionaire-quiz-game
+   git clone https://github.com/GeneralDido/peak-puzzler-quiz-frontend.git
+   cd peak-puzzler-quiz-game
    ```
 
 2. Install dependencies:
@@ -56,7 +56,7 @@ Before you begin, ensure you have the following installed:
    # or
    pnpm install
    ```
-3. Setup the backend server, see [this repository](https://github.com/GeneralDido/millionaire_game_backend).
+3. Setup the backend server, see [this repository](https://github.com/GeneralDido/peak-puzzler-quiz-backend).
 
 
 4. Create a `.env.local` file in the root directory with the following variables:
@@ -81,7 +81,7 @@ Before you begin, ensure you have the following installed:
 ## 🏗️ Project Structure
 
 ```
-millionaire-quiz-game/
+peak-puzzler-quiz-game/
 ├── app/                    # Next.js App Router
 │   ├── admin/              # Admin pages (dashboard, game management)
 │   ├── api/                # API routes
