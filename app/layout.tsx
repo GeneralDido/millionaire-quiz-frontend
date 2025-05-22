@@ -9,7 +9,10 @@ import MobileNavigation from '@/components/MobileNavigation'
 import React from 'react'
 import {NextIntlClientProvider} from 'next-intl'
 import {getMessages, getTranslations} from 'next-intl/server'
+import {metadata as appMetadata} from './metadata'
+import {Metadata} from 'next'
 
+export const metadata: Metadata = appMetadata
 
 export default async function RootLayout({children}: { children: React.ReactNode }) {
   const messages = await getMessages();
