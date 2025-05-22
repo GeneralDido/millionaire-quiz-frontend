@@ -1,20 +1,22 @@
-// components/MobileNavigation.tsx
+// components/navigation/MobileNavigation.tsx
 'use client'
 
 import {useState} from 'react'
 import Link from 'next/link'
+import {useTranslations} from 'next-intl'
 import {Menu, X} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 
-const navLinks = [
-  {href: '/', label: 'Home'},
-  {href: '/leaderboard', label: 'Leaderboard'},
-  {href: '/how-to-play', label: 'How to Play'},
-  {href: '/admin', label: 'Admin'}
-]
+const navigationLinks = [
+  {href: '/', key: 'home'},
+  {href: '/leaderboard', key: 'leaderboard'},
+  {href: '/how-to-play', key: 'howToPlay'},
+  {href: '/admin', key: 'admin'}
+] as const
 
 export default function MobileNavigation() {
   const [isOpen, setIsOpen] = useState(false)
+  const t = useTranslations('Navigation')
 
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
@@ -47,14 +49,14 @@ export default function MobileNavigation() {
           <div
             className="fixed top-[73px] left-0 right-0 bg-background border-b border-border/50 shadow-lg z-50 sm:hidden">
             <nav className="flex flex-col p-4 space-y-3">
-              {navLinks.map((link) => (
+              {navigationLinks.map(({href, key}) => (
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  key={href}
+                  href={href}
                   onClick={closeMenu}
                   className="text-foreground/80 hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-secondary/50"
                 >
-                  {link.label}
+                  {t(key)}
                 </Link>
               ))}
             </nav>
