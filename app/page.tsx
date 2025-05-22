@@ -1,6 +1,7 @@
 'use client'
 
 import React, {useState} from 'react'
+import Image from 'next/image'
 import {useRouter} from 'next/navigation'
 import {useTranslations} from 'next-intl'
 import {Button} from '@/components/ui/button'
@@ -27,7 +28,14 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] -mt-16 space-y-12">
-      <div className="text-center space-y-6">
+      <div className="text-center space-y-6 py-10 sm:py-0">
+        <Image
+          src="/favicon.svg"
+          alt="PeakPuzzler logo"
+          width={96}
+          height={96}
+          className="mx-auto"
+        />
         <h1 className="text-6xl sm:text-7xl font-extrabold tracking-tight">
           <span className="block bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
             {t('title')}
@@ -38,7 +46,6 @@ export default function Home() {
           {t('description')}
         </p>
       </div>
-
       <div className="w-full max-w-md space-y-8">
         <Button
           onClick={() => router.push('/play/random')}
