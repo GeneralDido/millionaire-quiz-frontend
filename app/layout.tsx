@@ -9,7 +9,6 @@ import MobileNavigation from '@/components/MobileNavigation'
 import React from 'react'
 import {NextIntlClientProvider} from 'next-intl'
 import {getMessages, getTranslations} from 'next-intl/server'
-import {Toaster} from 'react-hot-toast'
 
 
 export default async function RootLayout({children}: { children: React.ReactNode }) {
@@ -22,7 +21,6 @@ export default async function RootLayout({children}: { children: React.ReactNode
     <body className="min-h-screen bg-gradient-to-b from-background to-secondary">
     <NextIntlClientProvider messages={messages}>
       <Providers>
-        <Toaster/>
         <div className="flex flex-col min-h-screen">
           <header className="py-4 px-6 border-b border-border/50 backdrop-blur-sm bg-background/80 relative">
             <div className="max-w-7xl mx-auto flex justify-between items-center">
