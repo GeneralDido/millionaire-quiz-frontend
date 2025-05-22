@@ -1,22 +1,58 @@
 // hooks/useSessionState.ts
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useCallback} from 'react'
 
 export function useSessionState<T>(
   key: string,
   defaultValue: T
-): [T, (v: T) => void] {
+): [T, (value: T | ((prev: T) => T)) => void, () => void] {
   const [state, setState] = useState<T>(() => {
+    if (typeof window === 'undefined') return defaultValue
+
     try {
-      const json = sessionStorage.getItem(key)
-      return json ? JSON.parse(json) : defaultValue
-    } catch {
+      const item = sessionStorage.getItem(key)
+      return item ? JSON.parse(item) : defaultValue
+    } catch (error) {
+      console.warn(`Error reading sessionStorage key "${key}":`, error)
       return defaultValue
     }
   })
 
-  useEffect(() => {
-    sessionStorage.setItem(key, JSON.stringify(state))
-  }, [key, state])
+  const setValue = useCallback((value: T | ((prev: T) => T)) => {
+    setState((prev) => {
+      const newValue = typeof value === 'function' ? (value as (prev: T) => T)(prev) : value
 
-  return [state, setState]
+      try {
+        sessionStorage.setItem(key, JSON.stringify(newValue))
+      } catch (error) {
+        console.warn(`Error setting sessionStorage key "${key}":`, error)
+      }
+
+      return newValue
+    })
+  }, [key])
+
+  const clearValue = useCallback(() => {
+    try {
+      sessionStorage.removeItem(key)
+      setState(defaultValue)
+    } catch (error) {
+      console.warn(`Error removing sessionStorage key "${key}":`, error)
+    }
+  }, [key, defaultValue])
+
+  // Sync with sessionStorage on key change
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    try {
+      const item = sessionStorage.getItem(key)
+      if (item !== null) {
+        setState(JSON.parse(item))
+      }
+    } catch (error) {
+      console.warn(`Error reading sessionStorage key "${key}":`, error)
+    }
+  }, [key])
+
+  return [state, setValue, clearValue]
 }
