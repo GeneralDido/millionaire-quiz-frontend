@@ -58,7 +58,6 @@ Before you begin, ensure you have the following installed:
    ```
 3. Setup the backend server, see [this repository](https://github.com/GeneralDido/peak-puzzler-quiz-backend).
 
-
 4. Create a `.env.local` file in the root directory with the following variables:
    ```env
    ADMIN_USER=demo
@@ -90,10 +89,43 @@ peak-puzzler-quiz-game/
 │   ├── play/               # Game play pages
 │   └── layout.tsx          # Root layout
 ├── components/             # React components
+│   ├── admin/              # Admin-specific components
+│   │   ├── GameGenerator.tsx
+│   │   └── GamesList.tsx
+│   ├── navigation/         # Navigation components
+│   │   ├── AppHeader.tsx
+│   │   ├── DesktopNavigation.tsx
+│   │   └── MobileNavigation.tsx
+│   ├── play/               # Game play components
+│   │   ├── GameHeader.tsx
+│   │   └── PrizeLadder.tsx
+│   ├── question/           # Question-related components
+│   │   ├── AnswerOptions.tsx
+│   │   ├── HintDisplay.tsx
+│   │   ├── LifelinesPanel.tsx
+│   │   └── QuestionHeader.tsx
 │   ├── ui/                 # UI components (buttons, cards, etc.)
-│   └── ...                 # Game-specific components
+│   │   ├── EmptyState.tsx
+│   │   ├── ErrorState.tsx
+│   │   ├── LoadingState.tsx
+│   │   └── ...
+│   ├── GameSelector.tsx    # Game selection component
+│   ├── HeroSection.tsx     # Home page hero section
+│   ├── LeaderboardTable.tsx
+│   ├── QuestionCard.tsx
+│   ├── QuestionCardSkeleton.tsx
+│   ├── ScoreForm.tsx
+│   ├── ThemeToggle.tsx
+│   └── ...                 # Other components
 ├── context/                # React context providers
+│   └── QuestionContext.tsx
 ├── hooks/                  # Custom React hooks
+│   ├── useGame.ts
+│   ├── useGameLogic.ts
+│   ├── useGameState.ts
+│   ├── useGamesList.ts
+│   ├── useSessionState.ts
+│   └── ...
 ├── lib/                    # Utility functions and libraries
 ├── messages/               # Internationalization messages
 ├── public/                 # Static assets
@@ -137,6 +169,7 @@ peak-puzzler-quiz-game/
 - `GET /api/games/:id` - Get a specific game by ID
 - `POST /api/games` - Create a new game (admin only)
 - `DELETE /api/games/:id` - Delete a game (admin only)
+- `PUT /api/games/:id` - Update a game (admin only)
 
 ### Leaderboard API
 
@@ -148,12 +181,15 @@ peak-puzzler-quiz-game/
 - `POST /api/admin/login` - Admin login
 - `GET /api/admin/me` - Check admin authentication status
 - `POST /api/admin/generate` - Generate a new game (admin only)
+- `PUT /api/admin/update` - Update a game (admin only)
 
 ## 🧩 Custom Hooks
 
 - `useGame(id?)`: Fetch a game by ID or a random game if no ID is provided
 - `useGamesList()`: Fetch the list of available games
 - `useGameLogic()`: Handle the game logic (questions, answers, lifelines, etc.)
+- `useGameState()`: Manage game state with session persistence
+- `useSessionState()`: Generic hook for session storage state management
 - `useLeaderboard()`: Fetch the leaderboard scores
 - `useAdminGenerate()`: Generate a new game (admin only)
 - `useAdminDeleteGame()`: Delete a game (admin only)
@@ -172,3 +208,18 @@ pnpm test
 
 The test files are located next to the components they test with a `.test.tsx` extension.
 
+## 🏗️ Component Architecture
+
+The project follows a modular component architecture:
+
+- **Page Components**: Located in the `app/` directory, handle routing and high-level state
+- **Feature Components**: Organized by feature domain (admin, navigation, play, question)
+- **UI Components**: Reusable, generic components (buttons, modals, loading states)
+- **Shared Components**: Components used across multiple features
+
+### Component Organization Principles
+
+- **Single Responsibility**: Each component has a clear, focused purpose
+- **Reusability**: UI components are generic and reusable across features
+- **Separation of Concerns**: Business logic is separated from presentation logic
+- **Type Safety**: All components are fully typed with TypeScript
