@@ -1,6 +1,7 @@
 // app/layout.tsx
 import '@/styles/globals.css'
 import {SpeedInsights} from "@vercel/speed-insights/next"
+import {Analytics} from "@vercel/analytics/next"
 import {Providers} from './providers'
 import Link from 'next/link'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -62,6 +63,7 @@ export default async function RootLayout({children}: { children: React.ReactNode
         </div>
       </Providers>
       <SpeedInsights/>
+      <Analytics/>
     </NextIntlClientProvider>
     </body>
     </html>
