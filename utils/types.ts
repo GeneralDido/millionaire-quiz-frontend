@@ -36,7 +36,8 @@ export interface paths {
          * @description Get a specific game by ID
          */
         get: operations["get_game_games__game_id__get"];
-        put?: never;
+        /** (Admin) Update an existing game via AI prompt */
+        put: operations["update_game_games__game_id__put"];
         post?: never;
         /** (Admin) Delete a game and its questions and scores */
         delete: operations["delete_game_games__game_id__delete"];
@@ -165,7 +166,8 @@ export interface paths {
          * @description Get a specific game by ID
          */
         get: operations["get_game_admin_games__game_id__get"];
-        put?: never;
+        /** (Admin) Update an existing game via AI prompt */
+        put: operations["update_game_admin_games__game_id__put"];
         post?: never;
         /** (Admin) Delete a game and its questions and scores */
         delete: operations["delete_game_admin_games__game_id__delete"];
@@ -267,6 +269,14 @@ export interface components {
             questions: components["schemas"]["Question"][];
             bonus_question?: components["schemas"]["Question"] | null;
         };
+        /**
+         * GameUpdate
+         * @description Admin payload for updating an existing game.
+         */
+        GameUpdate: {
+            /** Prompt */
+            prompt: string;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -366,6 +376,41 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GameRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_game_games__game_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                game_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GameUpdate"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
@@ -596,6 +641,41 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GameRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_game_admin_games__game_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                game_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GameUpdate"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
