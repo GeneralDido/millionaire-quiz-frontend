@@ -36,7 +36,7 @@ export function PrizeLadder({maxQuestions, currentQuestionIndex}: PrizeLadderPro
               >
                 <span>{t('questionNumber', {number: questionIdx + 1})}</span>
                 <span className={isPastQuestion ? '' : 'money-text'}>
-                  ${value.toLocaleString()}
+                  {value.toLocaleString()}
                 </span>
               </div>
             )

@@ -30,7 +30,7 @@ export function GameHeader({
           </span>
         </div>
         <div className="money-text text-2xl font-mono" aria-label={t('currentScore', {score})}>
-          ${score.toLocaleString()}
+          {score.toLocaleString()}
         </div>
       </div>
 

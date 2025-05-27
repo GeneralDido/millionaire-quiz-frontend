@@ -23,7 +23,7 @@ export default function PlayAgain() {
       <div className="text-center mb-6">
         <h1 className="text-3xl font-bold mb-4">{t('gameOver')}</h1>
         <div className="inline-block mb-4 px-6 py-3 rounded-lg peak-puzzler-gradient">
-          <span className="text-4xl font-bold text-white">${score.toLocaleString()}</span>
+          <span className="text-4xl font-bold text-white">{score.toLocaleString()}</span>
         </div>
         <p className="text-lg text-foreground/80">
           {getEncouragementMessage(score)}

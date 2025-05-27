@@ -22,7 +22,7 @@ export function QuestionHeader() {
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-xl font-semibold">{t('questionNumber', {number: questionNumber})}</h2>
         <div className="text-right">
-          <p className="money-text text-xl sm:text-2xl font-medium">${pointValue.toLocaleString()}</p>
+          <p className="money-text text-xl sm:text-2xl font-medium">{pointValue.toLocaleString()}</p>
           {doublePointsActive && (
             <p className="text-money-gold text-sm font-medium animate-pulse">
               {t('doublePointsTime', {time: Math.ceil(timeLeft)})}
